@@ -7,18 +7,6 @@ import java.util.Random;
  * Created by admin on 20.09.2017.
  */
 public class Game {
-    //Settings
-    private int settings_millisecondsPerFrame = 33;
-    private int settings_playerHeight = 10;
-    private int settings_playerWidth = 20;
-    private int settings_meteoriteMovement = 5;
-    private int settings_height = 100;
-    private int settings_lineWidth;
-    private int settings_linesExisting = 3;
-    private int settings_timeTillNewMeteorite = 5000;
-    private int settings_timeTillVelocityIncrease = 10000;
-    private float settings_velocityIncrease = (float)1.1;
-
     private int timeTillNextMeteorite;
     private int currentVelocity;
     private int timeTillVelocityIncrease;
@@ -36,7 +24,6 @@ public class Game {
     public Game(ISaveFileManager saveManager){
         SaveManager = saveManager;
         ResetGame();
-        settings_lineWidth = (int)PlayerInstance.setting_maxPosition / 3;
     }
 
     protected boolean DoFrame(float bearing){
@@ -49,18 +36,18 @@ public class Game {
 
         //Moves existing Meteorites
         for (Meteorite meteor:Meteorites){
-            meteor.SetLatitude(meteor.GetLatitude() - settings_meteoriteMovement * currentVelocity);
+            meteor.SetLatitude(meteor.GetLatitude() - Settings.Meteorites_Movement * currentVelocity);
 
             //Removes meteorite if Latitude is under 0
             if(meteor.GetLatitude() <= 0) {
                 meteoriteToRemove = meteor;
             }
             //Checks for collisions
-            else if(meteor.GetLatitude() <= settings_playerHeight){
-                int meteorPositionLeft = (meteor.GetCourse() - 1) * settings_lineWidth;
-                int meteorPositionRight = meteor.GetCourse() * settings_lineWidth;
-                int playerPositionLeft = (int)PlayerInstance.GetPosition() - settings_playerWidth / 2;
-                int playerPositionRight = (int)PlayerInstance.GetPosition() + settings_playerWidth / 2;
+            else if(meteor.GetLatitude() <= Settings.Player_Height){
+                int meteorPositionLeft = (meteor.GetCourse() - 1) * Settings.Environment_LineWidth();
+                int meteorPositionRight = meteor.GetCourse() * Settings.Environment_LineWidth();
+                int playerPositionLeft = (int)PlayerInstance.GetPosition() - Settings.Player_Width / 2;
+                int playerPositionRight = (int)PlayerInstance.GetPosition() + Settings.Player_Width / 2;
                 if(meteorPositionLeft <= playerPositionRight && playerPositionLeft <= meteorPositionRight)
                     collision = true;
             }
@@ -73,21 +60,21 @@ public class Game {
             SaveManager.SaveGame(new SavedState(Score));
         else{
             //Adds Score
-            Score = Score + settings_millisecondsPerFrame;
+            Score = Score + Settings.Gameplay_MillisecondsPerFrame;
 
             //Add Meteorite if needed
             if(timeTillNextMeteorite >= 0) {
                 Random rand = new Random();
-                int randomNum = rand.nextInt((settings_linesExisting - 1) + 1) + 1;
+                int randomNum = rand.nextInt((Settings.Environment_LineCount - 1) + 1) + 1;
                 Meteorite meteor = new Meteorite(randomNum);
-                meteor.SetLatitude(settings_height);
+                meteor.SetLatitude(Settings.Player_Height);
                 Meteorites.add(meteor);
-                timeTillNextMeteorite = settings_timeTillNewMeteorite;
+                timeTillNextMeteorite = Settings.Gameplay_TimeTillNewMeteorite;
             }
             //Sets velocity
             if(timeTillVelocityIncrease <= 0){
-                timeTillVelocityIncrease = settings_timeTillVelocityIncrease;
-                currentVelocity = (int)(currentVelocity * settings_velocityIncrease);
+                timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
+                currentVelocity = (int)(currentVelocity * Settings.Gameplay_VelocityIncrease);
             }
         }
 
@@ -116,7 +103,7 @@ public class Game {
         PlayerInstance = new Player();
         Meteorites = new ArrayList<Meteorite>();
         timeTillNextMeteorite = 0;
-        timeTillVelocityIncrease = settings_timeTillVelocityIncrease;
+        timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
         currentVelocity = 1;
     }
 }
