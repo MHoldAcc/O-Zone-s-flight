@@ -5,16 +5,15 @@ package onebit.o_zonesflight;
  */
 public class Player {
     //Settings for development
-    private float setting_deathZone = (float)0.1;
-    private float setting_maxPosition = 100;
-    private float setting_minPosition = 0;
-    private float setting_maxMovement = 5;
+    protected float setting_deathZone = (float)0.1;
+    protected float setting_maxPosition = 100;
+    protected float setting_maxMovement = 5;
 
     //0-100
     private float Position;
 
     public Player(){
-        int position = (int) ((setting_minPosition + setting_maxPosition) / 2);
+        int position = (int) (setting_maxPosition / 2);
         Position = (long)position;
     }
 
@@ -37,7 +36,7 @@ public class Player {
         Position = Position + movement;
         if(Position > setting_maxPosition)
             Position = setting_maxPosition;
-        else if (Position < setting_minPosition)
-            Position = setting_minPosition;
+        else if (Position < 0)
+            Position = 0;
     }
 }
