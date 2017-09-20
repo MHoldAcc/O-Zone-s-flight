@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".UIController">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/txt_highscore"
+        android:id="@+id/tex_highscore"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/dim_margin_menu" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="@dimen/dim_button_width"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_credits"
+        android:id="@+id/btn_credits"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dim_margin_menu"
+        android:onClick="OnClickHandler"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="@dimen/dim_button_width"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_startgame"
+        android:id="@+id/btn_start"
+        android:layout_above="@id/btn_credits"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dim_margin_view" />
+
+</RelativeLayout>

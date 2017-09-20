@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">O-Zone\'s flight</string>
+    <string name="txt_highscore">Highscore</string>
+    <string name="txt_defaultsavefile">ozone.savefile</string>
+    <string name="txt_credits">Credits</string>
+    <string name="txt_startgame">Start Game</string>
+    <string name="txt_tryagain">Try again</string>
+    <string name="txt_score">You reached</string>
+    <string name="txt_render_display">Render Display</string>
+    <string name="txt_scoreupcase">SCORE</string>
 </resources>
