@@ -17,10 +17,18 @@ public class Game {
     private ISaveFileManager SaveManager;
 
     public Game(ISaveFileManager saveManager){
-
+        SaveManager = saveManager;
+        ResetGame();
     }
 
     protected boolean DoFrame(float bearing){
+        //Moves Player
+        PlayerInstance.ApplyBearing(bearing);
+
+        //Move existing Meteorites and get collision
+
+        //Add Meteorite if needed
+
         return false;
     }
 
@@ -41,6 +49,9 @@ public class Game {
     }
 
     public void ResetGame(){
-
+        Score = 0;
+        HighScore = SaveManager.LoadGame().GetHighscore();
+        PlayerInstance = new Player();
+        Meteorites = new ArrayList<Meteorite>();
     }
 }
