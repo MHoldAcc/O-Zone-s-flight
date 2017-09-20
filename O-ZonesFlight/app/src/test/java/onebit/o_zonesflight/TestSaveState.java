@@ -3,17 +3,7 @@ package onebit.o_zonesflight;
 /**
  * Created by admin on 20.09.2017.
  */
-public class LocalSaveFileManager implements ISaveFileManager {
-    private String SaveFile;
-
-    public LocalSaveFileManager(String saveFile){
-
-    }
-
-    public void SetSaveFile(String saveFile){
-
-    }
-
+public class TestSaveState implements ISaveFileManager {
     @Override
     public SavedState LoadGame() {
         return new SavedState(0);
@@ -21,6 +11,5 @@ public class LocalSaveFileManager implements ISaveFileManager {
 
     @Override
     public void SaveGame(SavedState savedState) {
-
     }
 }
