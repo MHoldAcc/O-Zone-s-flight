@@ -3,12 +3,18 @@ package onebit.o_zonesflight;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,6 +61,7 @@ public class UIController extends Activity {
 
         InitializeMusic();
 
+
         // Switch to GameMenu State
         GameMenu();
     }
@@ -65,6 +72,7 @@ public class UIController extends Activity {
      * @param sender The button that was 'clicked'
      */
     public void OnClickHandler(View sender) {
+        System.out.print("TEST");
         switch (sender.getId()){
             case R.id.btn_start:    GameStart();    break;
             case R.id.btn_credits:  GameCredits();  break;
@@ -101,17 +109,55 @@ public class UIController extends Activity {
         setContentView(R.layout.lay_gamerunning);
         State = UIControllerState.Running;
         GameInstance.ResetGame();
-        ImageView Canvas = (ImageView) findViewById(R.id.img_canvas);
+        final ImageView canvasContainer = (ImageView) findViewById(R.id.img_canvas);
 
-        //Canvas.setImageBitmap();
 
-        GameTimer = new Timer();
-        GameTimer.schedule(new TimerTask() {
+        // Continue rest once the canvas is available:
+        canvasContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void run() {
-                GameTick();
+            public void onGlobalLayout() {
+
+                final Bitmap display = Bitmap.createBitmap(canvasContainer.getWidth(), canvasContainer.getHeight(), Bitmap.Config.ARGB_8888);
+                final Canvas canvas = new Canvas(display);
+                final Bitmap oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+                final Bitmap Meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+
+
+                canvasContainer.setImageBitmap(display);
+
+                GameTimer = new Timer();
+                GameTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+
+                        //Clear Screen
+                        canvas.drawColor(Color.BLACK);
+                        //Redraw
+
+                        //Player
+                        //Calculate position
+                        PointF pos = TranslatePosition(
+                                new PointF(GameInstance.GetPlayer().GetPosition(),100),
+                                oZone, display);
+                        canvas.drawBitmap(
+                                oZone,
+                                pos.x,
+                                pos.y,
+                                null);
+                        canvasContainer.invalidate();
+                        GameTick();
+                    }
+                }, 0, 33);
             }
-        }, 0, 33);
+        });
+    }
+
+    private PointF TranslatePosition(PointF pos, Bitmap image, Bitmap display){
+        float availableWidth = display.getWidth() - image.getWidth();
+        float availableHeight = display.getHeight() - image.getHeight();
+        return new PointF(
+                pos.x / 100 * availableWidth,
+                pos.y / 100 * availableHeight);
     }
 
     public void GameOver(){

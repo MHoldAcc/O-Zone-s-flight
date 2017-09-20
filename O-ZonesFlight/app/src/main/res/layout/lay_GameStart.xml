@@ -17,7 +17,7 @@
         android:id="@+id/tex_highscore"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="@dimen/dim_margin_menu" />
+        android:layout_marginTop="@dimen/dim_margin_menu"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -38,6 +38,7 @@
         android:id="@+id/btn_start"
         android:layout_above="@id/btn_credits"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dim_margin_view" />
+        android:layout_marginBottom="@dimen/dim_margin_view"
+        android:onClick="OnClickHandler" />
 
 </RelativeLayout>
