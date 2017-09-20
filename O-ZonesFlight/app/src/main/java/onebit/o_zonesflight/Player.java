@@ -4,13 +4,34 @@ package onebit.o_zonesflight;
  * Created by admin on 20.09.2017.
  */
 public class Player {
+    //0-100
     private float Position;
 
-    public float GetPosition(){
-        return 0;
+    public Player(){
+        int position = (int) (Settings.Environment_Width / 2);
+        Position = (long)position;
     }
 
-    public void ApplyBearing(float bearing){
+    public float GetPosition(){
+        return Position;
+    }
 
+    //bearing = -1 - 1
+    public void ApplyBearing(float bearing){
+        //Applies Deathzone 0.1
+        if(bearing >= -Settings.Inputs_DeathZone && bearing <= Settings.Inputs_DeathZone)
+            bearing = 0;
+        //Rounds if to big number
+        if(bearing > 1)
+            bearing = 1;
+        else if(bearing < -1)
+            bearing = -1;
+        //Sets position
+        float movement = Settings.Player_MaxMovement * bearing;
+        Position = Position + movement;
+        if(Position > Settings.Environment_Width)
+            Position = Settings.Environment_Width;
+        else if (Position < 0)
+            Position = 0;
     }
 }

@@ -7,10 +7,10 @@ public class SavedState {
     private int Highscore;
 
     public SavedState(int highscore){
-
+        Highscore = highscore;
     }
 
     public int GetHighscore(){
-        return 0;
+        return Highscore;
     }
 }
