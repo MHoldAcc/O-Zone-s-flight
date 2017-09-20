@@ -11,18 +11,18 @@ public class Meteorite {
     private float Latitude;
 
     public Meteorite(int course){
-
+        Course = course;
     }
 
     int GetCourse(){
-        return 0;
+        return Course;
     }
 
     float GetLatitude(){
-        return 0;
+        return Latitude;
     }
 
     void SetLatitude(float latitude){
-
+        Latitude = latitude;
     }
 }
