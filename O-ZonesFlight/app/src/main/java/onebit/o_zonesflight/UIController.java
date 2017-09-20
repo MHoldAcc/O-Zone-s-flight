@@ -12,12 +12,14 @@ import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.hardware.display.DisplayManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.InvocationHandler;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,8 +36,20 @@ public class UIController extends Activity {
     private Game GameInstance;
     /** The state of the UI Controller */
     private UIControllerState State;
-    /** The Game Timer to make the game act on itself */
+
+
+    // Timer
     private Timer GameTimer;
+    private TimerTask TickWrapper;
+
+
+    //Sprites
+    private Bitmap oZone;
+    private Bitmap meteor;
+
+    //Resources
+    private Bitmap display;
+    private Canvas canvas;
 
     /**
      * Called upon creation of the Activity. A.K.A. Application start/resume
@@ -50,7 +64,7 @@ public class UIController extends Activity {
         //Initialize sensor
         Sensor = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-
+        // TODO: finish it
 
         //Initialize SaveFileManager
         String saveFile = getResources().getString(R.string.txt_defaultsavefile);
@@ -59,8 +73,12 @@ public class UIController extends Activity {
         //Initialize Game & Load Data
         GameInstance = new Game(saveFileManager);
 
+        //Initialize Sound
         InitializeMusic();
 
+        //Initialize Sprites
+        oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
         // Switch to GameMenu State
         GameMenu();
@@ -88,7 +106,25 @@ public class UIController extends Activity {
      * Makes the game progress while it's running.
      * Called by the GameTimer each tick.
      */
-    private void GameTick(){
+    protected void GameTick(){
+
+        //Clear Screen
+        canvas.drawColor(Color.BLACK);
+        //Redraw
+
+        //Player
+        //Calculate position
+        PointF pos = TranslatePosition(
+                new PointF(GameInstance.GetPlayer().GetPosition(),100),
+                oZone, display);
+        //Draw Player
+        canvas.drawBitmap(
+                oZone,
+                pos.x,
+                pos.y,
+                null);
+
+
         float bearing = 0;
 
 
@@ -98,70 +134,52 @@ public class UIController extends Activity {
         bearing = Math.min(-1, Math.max(1, bearing));
         if (GameInstance.DoFrame(bearing))
         {
+            TickWrapper.cancel();
             GameTimer.cancel();
-            GameTimer.purge();
             GameOver();
         }
     }
 
+    /**
+     * Initiates the Game
+     */
     public void GameStart(){
         // Set layout and state
         setContentView(R.layout.lay_gamerunning);
         State = UIControllerState.Running;
+
+        //Reset existing game status
         GameInstance.ResetGame();
-        final ImageView canvasContainer = (ImageView) findViewById(R.id.img_canvas);
 
-
+        //
+        ImageView canvasContainer = (ImageView) findViewById(R.id.img_canvas);
+        canvasContainer.getViewTreeObserver().addOnGlobalLayoutListener(new CanvasLayoutListener(this, canvasContainer));
         // Continue rest once the canvas is available:
-        canvasContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+    }
+
+    /**
+     * Layout has been finished, the game screen size calculated. Game Loop can now be started
+     * @param display The bitmap representing the display
+     */
+    public void LayoutDoneCallback(Bitmap display){
+        this.display = display;
+        final Handler mainHandler = new Handler(getMainLooper());
+        canvas = new Canvas(display);
+        GameTimer = new Timer();
+        TickWrapper = new TimerTask() {
             @Override
-            public void onGlobalLayout() {
-
-                final Bitmap display = Bitmap.createBitmap(canvasContainer.getWidth(), canvasContainer.getHeight(), Bitmap.Config.ARGB_8888);
-                final Canvas canvas = new Canvas(display);
-                final Bitmap oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-                final Bitmap Meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-
-
-                canvasContainer.setImageBitmap(display);
-
-                GameTimer = new Timer();
-                GameTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-
-                        //Clear Screen
-                        canvas.drawColor(Color.BLACK);
-                        //Redraw
-
-                        //Player
-                        //Calculate position
-                        PointF pos = TranslatePosition(
-                                new PointF(GameInstance.GetPlayer().GetPosition(),100),
-                                oZone, display);
-                        canvas.drawBitmap(
-                                oZone,
-                                pos.x,
-                                pos.y,
-                                null);
-                        canvasContainer.invalidate();
-                        GameTick();
-                    }
-                }, 0, 33);
+            public void run() {
+                mainHandler.post(new GameTickRunnable(UIController.this));
             }
-        });
+        };
+
+        GameTimer.schedule(TickWrapper, 0, 33);
     }
 
-    private PointF TranslatePosition(PointF pos, Bitmap image, Bitmap display){
-        float availableWidth = display.getWidth() - image.getWidth();
-        float availableHeight = display.getHeight() - image.getHeight();
-        return new PointF(
-                pos.x / 100 * availableWidth,
-                pos.y / 100 * availableHeight);
-    }
 
     public void GameOver(){
         // Set layout and state
+
         setContentView(R.layout.lay_gamestart);
         State = UIControllerState.GameOver;
 
@@ -211,5 +229,14 @@ public class UIController extends Activity {
 
     public void InitializeMusic(){
         //TODO make music run or something liek taht.
+    }
+
+
+    private PointF TranslatePosition(PointF pos, Bitmap image, Bitmap display){
+        float availableWidth = display.getWidth() - image.getWidth();
+        float availableHeight = display.getHeight() - image.getHeight();
+        return new PointF(
+                pos.x / 100 * availableWidth,
+                pos.y / 100 * availableHeight);
     }
 }
