@@ -14,7 +14,7 @@ public class Game {
     /**
      * The current Velocity of the meteorites
      */
-    private int currentVelocity;
+    private float currentVelocity;
     /**
      * The time till the next increase of velocity
      */
@@ -107,7 +107,7 @@ public class Game {
             //Sets velocity
             if(timeTillVelocityIncrease <= 0){
                 timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
-                currentVelocity = (int)(currentVelocity * Settings.Gameplay_VelocityIncrease);
+                currentVelocity = currentVelocity * Settings.Gameplay_VelocityIncrease;
             }
         }
 

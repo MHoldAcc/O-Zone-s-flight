@@ -7,7 +7,7 @@ public class Settings {
     //***Gameplay***
     protected final static int Gameplay_TimeTillNewMeteorite = 1000;
     protected final static int Gameplay_TimeTillVelocityIncrease = 5000;
-    protected final static float Gameplay_VelocityIncrease = 1.5f;
+    protected final static float Gameplay_VelocityIncrease = 1.1f;
     protected final static int Gameplay_MillisecondsPerFrame = 33;
     //***Player***
     protected final static int Player_MaxMovement = 40;
