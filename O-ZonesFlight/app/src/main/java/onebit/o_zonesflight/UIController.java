@@ -273,18 +273,6 @@ public class UIController extends Activity {
         player.start();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        player.pause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        player.start();
-    }
-
     private PointF TranslatePlayerPos(Player player, Bitmap display){
         return new PointF(
                 player.GetPosition() / Settings.Environment_Width * display.getWidth(),
