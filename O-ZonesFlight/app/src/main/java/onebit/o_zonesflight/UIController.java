@@ -41,8 +41,9 @@ public class UIController extends Activity {
 
 
     //Sprites
-    private Bitmap oZone;
-    private Bitmap meteor;
+    private Bitmap bmp_oZone;
+    private Bitmap bmp_meteor;
+    private Bitmap bmp_space;
 
     //Resources
     private MediaPlayer player = null;
@@ -82,8 +83,9 @@ public class UIController extends Activity {
         InitializeMusic();
 
         //Initialize Sprites
-        oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ozone_character);
-        meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.meteorite);
+        bmp_oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ozone_character);
+        bmp_meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.meteorite);
+        bmp_space = BitmapFactory.decodeResource(getResources(),R.mipmap.space);
 
         // Switch to GameMenu State
         GameMenu();
@@ -115,7 +117,19 @@ public class UIController extends Activity {
     protected void GameTick(){
 
         //Clear Screen
-        canvas.drawColor(Color.BLACK);
+        canvas.drawBitmap(
+                bmp_space,
+                new Rect(
+                        0,
+                        0,
+                        bmp_space.getWidth(),
+                        bmp_space.getHeight()),
+                new Rect(
+                        0,
+                        0,
+                        display.getWidth(),
+                        display.getHeight()),
+                null);
         //Redraw
 
         //Player
@@ -123,12 +137,12 @@ public class UIController extends Activity {
         PointF pos = TranslatePlayerPos(GameInstance.GetPlayer(), display);
         //Draw Player
         canvas.drawBitmap(
-                oZone,
+                bmp_oZone,
                 new Rect(
                         0,
                         0,
-                        oZone.getWidth(),
-                        oZone.getHeight()),
+                        bmp_oZone.getWidth(),
+                        bmp_oZone.getHeight()),
                 new RectF(
                         pos.x,
                         pos.y,
@@ -140,12 +154,12 @@ public class UIController extends Activity {
             //Calculate
             pos = TranslateMeteorPos(m, display);
             canvas.drawBitmap(
-                    meteor,
+                    bmp_meteor,
                     new Rect(
                             0,
                             0,
-                            meteor.getWidth(),
-                            meteor.getHeight()),
+                            bmp_meteor.getWidth(),
+                            bmp_meteor.getHeight()),
                     new RectF(
                             pos.x,
                             pos.y,
