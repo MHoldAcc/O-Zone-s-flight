@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -80,8 +79,8 @@ public class UIController extends Activity {
         InitializeMusic();
 
         //Initialize Sprites
-        oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ozone_character);
+        meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.meteor);
 
         // Switch to GameMenu State
         GameMenu();
