@@ -61,9 +61,12 @@ public class Game {
         else{
             //Adds Score
             Score = Score + Settings.Gameplay_MillisecondsPerFrame;
+            //Sets time till
+            timeTillNextMeteorite = timeTillNextMeteorite - Settings.Gameplay_MillisecondsPerFrame;
+            timeTillVelocityIncrease = timeTillVelocityIncrease - Settings.Gameplay_MillisecondsPerFrame;
 
             //Add Meteorite if needed
-            if(timeTillNextMeteorite >= 0) {
+            if(timeTillNextMeteorite <= 0) {
                 Random rand = new Random();
                 int randomNum = rand.nextInt((Settings.Environment_LineCount - 1) + 1) + 1;
                 Meteorite meteor = new Meteorite(randomNum);
