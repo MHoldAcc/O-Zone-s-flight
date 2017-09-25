@@ -68,7 +68,7 @@ public class UIController extends Activity {
 
         //Initialize SaveFileManager
         String saveFile = getResources().getString(R.string.txt_defaultsavefile);
-        ISaveFileManager saveFileManager = new LocalSaveFileManager(saveFile);
+        ISaveFileManager saveFileManager = new LocalSaveFileManager(this);
 
         //Initialize Game & Load Data
         GameInstance = new Game(saveFileManager);
