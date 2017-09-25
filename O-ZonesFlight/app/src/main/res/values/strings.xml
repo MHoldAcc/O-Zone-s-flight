@@ -8,4 +8,5 @@
     <string name="txt_score">You reached</string>
     <string name="txt_render_display">Render Display</string>
     <string name="txt_scoreupcase">SCORE</string>
+    <string name="saved_high_score">0</string>
 </resources>
