@@ -13,13 +13,14 @@ public class Settings {
     protected final static int Player_MaxMovement = 40;
     protected final static int Player_Height = 10;
     protected final static int Player_Width = 20;
-    //***Meteorites***
-    protected final static int Meteorites_Movement = 1;
     //***Environment Sizes***
     protected final static int Environment_Width = 100;
     protected final static int Environment_Height = 100;
     protected final static int Environment_LineCount = 3;
     protected final static int Environment_LineWidth = Environment_Width / Environment_LineCount;
+    //***Meteorites***
+    protected final static int Meteorites_Movement = 1;
+    protected final static int Meteorites_Height = Environment_LineWidth;
     //***Inputs***
     protected final static float Inputs_DeathZone = 0.02f;
     protected final static float Inputs_MaxInput = 0.3f;
