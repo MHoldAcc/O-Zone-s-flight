@@ -5,9 +5,9 @@ package onebit.o_zonesflight;
  */
 public class Settings {
     //***Gameplay***
-    protected final static int Gameplay_TimeTillNewMeteorite = 5000;
-    protected final static int Gameplay_TimeTillVelocityIncrease = 10000;
-    protected final static float Gameplay_VelocityIncrease = 1.1f;
+    protected final static int Gameplay_TimeTillNewMeteorite = 1000;
+    protected final static int Gameplay_TimeTillVelocityIncrease = 5000;
+    protected final static float Gameplay_VelocityIncrease = 1.5f;
     protected final static int Gameplay_MillisecondsPerFrame = 33;
     //***Player***
     protected final static int Player_MaxMovement = 40;
@@ -19,7 +19,7 @@ public class Settings {
     protected final static int Environment_LineCount = 3;
     protected final static int Environment_LineWidth = Environment_Width / Environment_LineCount;
     //***Meteorites***
-    protected final static int Meteorites_Movement = 1;
+    protected final static int Meteorites_Movement = 3;
     protected final static int Meteorites_Height = Environment_LineWidth;
     //***Inputs***
     protected final static float Inputs_DeathZone = 0.02f;
