@@ -288,22 +288,37 @@ public class UIController extends Activity {
         player.pause();
     }
 
+    /**
+     *
+     */
     @Override
     protected void onResume() {
         super.onResume();
         player.start();
     }
 
+    /**
+     * Helper method to translate the player position of the game to corresponding display coordinates
+     * @param player The player instance
+     * @param display The display bitmap to render the player on
+     * @return A calculated PointF for the canvas to draw the player at
+     */
     private PointF TranslatePlayerPos(Player player, Bitmap display){
         return new PointF(
                 player.GetPosition() / (Settings.Environment_Width + Settings.Player_Width) * display.getWidth(),
                 display.getHeight() - display.getHeight() * Settings.Player_Height / (float)Settings.Environment_Height);
     }
+
+    /**
+     * Helper method that translates the Game Position to a corresponding position on display.
+     * @param m The Meteorite instance
+     * @param display The display bitmap to render the meteorite on
+     * @return The calculated position for the canvas to draw the meteorite
+     */
     private PointF TranslateMeteorPos(Meteorite m, Bitmap display){
-        float meteoriteSize = Settings.Environment_LineWidth / (float)Settings.Environment_Width;
         return new PointF(
-                (m.GetCourse()-1) * meteoriteSize * display.getWidth(),
-                (Settings.Environment_Height - m.GetLatitude() - Settings.Environment_LineWidth / 2f) / Settings.Environment_Height * display.getHeight()
+                (m.GetCourse()-1) * Settings.Environment_LineWidth / (float)Settings.Environment_Width * display.getWidth(),
+                (Settings.Environment_Height - m.GetLatitude() + Settings.Meteorites_Height - Settings.Player_Height) / Settings.Environment_Height * display.getHeight()
         );
     }
 }
