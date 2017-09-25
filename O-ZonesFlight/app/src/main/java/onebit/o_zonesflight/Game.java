@@ -44,8 +44,8 @@ public class Game {
             }
             //Checks for collisions
             else if(meteor.GetLatitude() <= Settings.Player_Height){
-                int meteorPositionLeft = (meteor.GetCourse() - 1) * Settings.Environment_LineWidth();
-                int meteorPositionRight = meteor.GetCourse() * Settings.Environment_LineWidth();
+                int meteorPositionLeft = (meteor.GetCourse() - 1) * Settings.Environment_LineWidth;
+                int meteorPositionRight = meteor.GetCourse() * Settings.Environment_LineWidth;
                 int playerPositionLeft = (int)PlayerInstance.GetPosition() - Settings.Player_Width / 2;
                 int playerPositionRight = (int)PlayerInstance.GetPosition() + Settings.Player_Width / 2;
                 if(meteorPositionLeft <= playerPositionRight && playerPositionLeft <= meteorPositionRight)

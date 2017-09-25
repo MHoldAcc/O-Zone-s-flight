@@ -10,7 +10,6 @@ import android.graphics.PointF;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +45,7 @@ public class UIController extends Activity {
     private Bitmap display;
     private Canvas canvas;
     private ImageView canvasContainer;
+    private float meteorWidth;
     /**
      * Called upon creation of the Activity. A.K.A. Application start/resume
      * The initialisation of the UI happens here
@@ -138,7 +138,7 @@ public class UIController extends Activity {
 
         //TODO read Bearing;
 
-        bearing = Math.min(-1, Math.max(1, bearing));
+        bearing = Math.max(-1, Math.min(1, bearing));
         boolean result = GameInstance.DoFrame(bearing);
         if (!result)
         {
@@ -173,6 +173,7 @@ public class UIController extends Activity {
         this.display = display;
         final Handler mainHandler = new Handler(getMainLooper());
         canvas = new Canvas(display);
+        meteorWidth = display.getWidth() / Settings.Environment_LineCount;
         GameTimer = new Timer();
         TickWrapper = new TimerTask() {
             @Override
@@ -220,7 +221,7 @@ public class UIController extends Activity {
      */
     public void GameMenu(){
         // Set layout and state
-        setContentView(R.layout.lay_gamestartforcerename);
+        setContentView(R.layout.lay_gamestart);
         State = UIControllerState.MainMenu;
 
         //load highscore
@@ -241,13 +242,13 @@ public class UIController extends Activity {
     }
     private PointF TranslatePlayerPos(Player player, Bitmap display){
         return new PointF(
-                player.GetPosition() / Settings.Environment_Width * (display.getWidth() - oZone.getWidth()),
+                player.GetPosition() / Settings.Environment_Width * display.getWidth(),
                 display.getHeight() - oZone.getHeight());
     }
     private PointF TranslateMeteorPos(Meteorite m, Bitmap display){
         return new PointF(
-                (m.GetCourse() * Settings.Environment_LineWidth())  / Settings.Environment_Width * (display.getWidth() - meteor.getWidth()),
-                (Settings.Environment_Height-m.GetLatitude())       / Settings.Environment_Height * (display.getHeight() - meteor.getHeight())
+                (m.GetCourse()-1) * Settings.Environment_LineWidth  / (float)Settings.Environment_Width * display.getWidth(),
+                (Settings.Environment_Height - m.GetLatitude())       / Settings.Environment_Height * (display.getHeight() - meteor.getHeight())
         );
     }
 }
