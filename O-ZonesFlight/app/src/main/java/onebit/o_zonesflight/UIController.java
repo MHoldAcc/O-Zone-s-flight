@@ -9,10 +9,12 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.hardware.GeomagneticField;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,8 +50,9 @@ public class UIController extends Activity {
     private Bitmap display;
     private Canvas canvas;
     private ImageView canvasContainer;
-    private GameSensorListener sensorListener;
-    private float inputBearing;
+    private OrientationSensorListener OrientationSensor;
+    private float[] Gravity;
+    private float[] Magnetic_Field;
     /**
      * Called upon creation of the Activity. A.K.A. Application start/resume
      * The initialisation of the UI happens here
@@ -60,13 +63,14 @@ public class UIController extends Activity {
         //load unmanaged stuff
         super.onCreate(savedInstanceState);
 
+        //Init sensor variables
+        Gravity = new float[3];
+        Magnetic_Field = new float[3];
+
         //Initialize sensor
-        if (sensorListener == null) {
-            sensorListener = new GameSensorListener(this);
-            Sensor = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-            Sensor.registerListener(sensorListener, Sensor.getDefaultSensor(android.hardware.Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_GAME);
-        }
-        // TODO: finish it
+        Sensor = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        OrientationSensor = new OrientationSensorListener(this, Sensor);
+
 
         //Initialize SaveFileManager
         String saveFile = getResources().getString(R.string.txt_defaultsavefile);
@@ -152,8 +156,21 @@ public class UIController extends Activity {
 
         canvasContainer.invalidate();
 
+        float[] R = new float[9];
+        float[] I = new float[9];
 
-        boolean result = GameInstance.DoFrame(inputBearing);
+        float[] values = new float[3];
+
+        Sensor.getRotationMatrix(R,I,Gravity, Magnetic_Field);
+        Sensor.getOrientation(R,values);
+
+        float azi = values[0] / (float)Math.PI;
+        float pitch = 2 * values[1] / (float)Math.PI;
+        float roll = values[2] / (float)Math.PI;
+
+        Log.d("SENSOR", "["+azi+"]["+pitch+"]["+roll+"]");
+
+        boolean result = GameInstance.DoFrame(roll);
         if (!result)
         {
             TickWrapper.cancel();
@@ -249,15 +266,18 @@ public class UIController extends Activity {
 
     private MediaPlayer player = null;
 
+    public void setGravity(float[] values){
+        Gravity = values;
+    }
+    public void setMagField(float[] values){
+        Magnetic_Field = values;
+    }
+
     public void InitializeMusic(){
         player = MediaPlayer.create(this, R.raw.apocalypse);
         player.setLooping(true); // Set looping
         player.setVolume(1.0f, 1.0f);
         player.start();
-    }
-
-    public void SensorCallback(float newValue){
-
     }
 
     @Override
@@ -274,7 +294,7 @@ public class UIController extends Activity {
 
     private PointF TranslatePlayerPos(Player player, Bitmap display){
         return new PointF(
-                player.GetPosition() / Settings.Environment_Width * display.getWidth(),
+                (player.GetPosition()) / (Settings.Environment_Width+Settings.Player_Width) * display.getWidth(),
                 display.getHeight() - oZone.getHeight());
     }
     private PointF TranslateMeteorPos(Meteorite m, Bitmap display){
