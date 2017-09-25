@@ -53,6 +53,7 @@ public class UIController extends Activity {
     private OrientationSensorListener OrientationSensor;
     private float[] Gravity;
     private float[] Magnetic_Field;
+    TextView scoreDisplay;
     /**
      * Called upon creation of the Activity. A.K.A. Application start/resume
      * The initialisation of the UI happens here
@@ -153,29 +154,31 @@ public class UIController extends Activity {
                             pos.y + display.getWidth() / Settings.Environment_LineCount/* + display.getHeight() * (Settings.Player_Height / (float)Settings.Environment_Height)*/),
                     null);
         }
-
+        // MAke screen refresh
         canvasContainer.invalidate();
 
-        float[] R = new float[9];
+        // Read Sensor Data
+        float[] Rota = new float[9];
         float[] I = new float[9];
-
         float[] values = new float[3];
+        Sensor.getRotationMatrix(Rota,I,Gravity, Magnetic_Field);
+        Sensor.getOrientation(Rota,values);
 
-        Sensor.getRotationMatrix(R,I,Gravity, Magnetic_Field);
-        Sensor.getOrientation(R,values);
-
+        // Format sensor data
         float azi = values[0] / (float)Math.PI;
         float pitch = 2 * values[1] / (float)Math.PI;
         float roll = values[2] / (float)Math.PI;
 
-        Log.d("SENSOR", "["+azi+"]["+pitch+"]["+roll+"]");
-
+        //Do Game Tick
         boolean result = GameInstance.DoFrame(roll);
         if (!result)
         {
             TickWrapper.cancel();
             GameTimer.cancel();
             GameOver();
+        } else{
+            // Update Score
+            scoreDisplay.setText(String.valueOf(GameInstance.GetScore()));
         }
     }
 
@@ -189,7 +192,7 @@ public class UIController extends Activity {
 
         //Reset existing game status
         GameInstance.ResetGame();
-
+        scoreDisplay = (TextView)findViewById(R.id.tex_score);
         //
         canvasContainer = (ImageView) findViewById(R.id.img_canvas);
         canvasContainer.getViewTreeObserver().addOnGlobalLayoutListener(new CanvasLayoutListener(this, canvasContainer));
