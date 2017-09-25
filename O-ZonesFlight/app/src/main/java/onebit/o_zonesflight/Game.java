@@ -43,7 +43,7 @@ public class Game {
                 meteoriteToRemove = meteor;
             }
             //Checks for collisions
-            else if(meteor.GetLatitude() <= Settings.Player_Height){
+            else if(meteor.GetLatitude() - Settings.Meteorites_Height <= Settings.Player_Height){
                 int meteorPositionLeft = (meteor.GetCourse() - 1) * Settings.Environment_LineWidth;
                 int meteorPositionRight = meteor.GetCourse() * Settings.Environment_LineWidth;
                 int playerPositionLeft = (int)PlayerInstance.GetPosition() - Settings.Player_Width / 2;
@@ -72,7 +72,7 @@ public class Game {
                 Random rand = new Random();
                 int randomNum = rand.nextInt((Settings.Environment_LineCount - 1) + 1) + 1;
                 Meteorite meteor = new Meteorite(randomNum);
-                meteor.SetLatitude(Settings.Environment_Height);
+                meteor.SetLatitude(Settings.Environment_Height + Settings.Meteorites_Height);
                 Meteorites.add(meteor);
                 timeTillNextMeteorite = Settings.Gameplay_TimeTillNewMeteorite;
             }
