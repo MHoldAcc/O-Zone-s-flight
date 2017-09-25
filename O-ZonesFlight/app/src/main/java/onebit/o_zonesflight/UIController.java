@@ -124,6 +124,7 @@ public class UIController extends Activity {
                 pos.y,
                 null);
 
+        findViewById(R.id.img_canvas).invalidate();
 
         float bearing = 0;
 
@@ -132,7 +133,8 @@ public class UIController extends Activity {
         //TODO read Bearing;
 
         bearing = Math.min(-1, Math.max(1, bearing));
-        if (GameInstance.DoFrame(bearing))
+        boolean result = GameInstance.DoFrame(bearing);
+        if (!result)
         {
             TickWrapper.cancel();
             GameTimer.cancel();
@@ -154,7 +156,7 @@ public class UIController extends Activity {
         //
         ImageView canvasContainer = (ImageView) findViewById(R.id.img_canvas);
         canvasContainer.getViewTreeObserver().addOnGlobalLayoutListener(new CanvasLayoutListener(this, canvasContainer));
-        // Continue rest once the canvas is available:
+        // Continue rest once the canvas is available on the LayoutDoneCallback
     }
 
     /**
@@ -180,7 +182,7 @@ public class UIController extends Activity {
     public void GameOver(){
         // Set layout and state
 
-        setContentView(R.layout.lay_gamestart);
+        setContentView(R.layout.lay_gameover);
         State = UIControllerState.GameOver;
 
         //load highscore

@@ -48,6 +48,7 @@
         android:id="@+id/btn_start"
         android:layout_above="@id/btn_credits"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dim_margin_view" />
+        android:layout_marginBottom="@dimen/dim_margin_view"
+        android:onClick="OnClickHandler"/>
 
 </RelativeLayout>
