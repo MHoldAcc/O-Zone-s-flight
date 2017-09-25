@@ -36,22 +36,34 @@ public class UIController extends Activity {
 
 
     // Timer
+    /** The timer which runs the game loop */
     private Timer GameTimer;
+    /** The task which is called by the timer to run the game loop */
     private TimerTask TickWrapper;
 
 
     //Sprites
+    /** The player Sprite */
     private Bitmap bmp_oZone;
+    /** The Meteor Sprite */
     private Bitmap bmp_meteor;
+    /** The Background Sprite */
     private Bitmap bmp_space;
 
     //Resources
+    /** The Music Player */
     private MediaPlayer player = null;
+    /** The Display Bitmap the canvas draws on */
     private Bitmap display;
+    /** The Canvas instance that draws the game on the UI */
     private Canvas canvas;
+    /** ImageView which renders the game */
     private ImageView canvasContainer;
+    /** Provides data required to read the orientation of the device */
     private OrientationSensorListener OrientationSensor;
+    /** Data required to read the orientation of the device */
     private float[] Gravity;
+    /** Data required to read the orientation of the device */
     private float[] Magnetic_Field;
     /**
      * Called upon creation of the Activity. A.K.A. Application start/resume
