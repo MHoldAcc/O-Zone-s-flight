@@ -4,28 +4,56 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by admin on 20.09.2017.
+ * Created by Michael on 20.09.2017.
  */
 public class Game {
+    /**
+     * The time till the next meteorite strikes
+     */
     private int timeTillNextMeteorite;
+    /**
+     * The current Velocity of the meteorites
+     */
     private int currentVelocity;
+    /**
+     * The time till the next increase of velocity
+     */
     private int timeTillVelocityIncrease;
-
+    /**
+     * All current meteorites
+     */
     private ArrayList<Meteorite> Meteorites;
-
+    /**
+     * The current player
+     */
     private Player PlayerInstance;
-
+    /**
+     * The current score
+     */
     private int Score;
-
+    /**
+     * The current highscore
+     */
     private int HighScore;
-
+    /**
+     * Manages saving and loading
+     */
     private ISaveFileManager SaveManager;
 
+    /**
+     * Initializes Game
+     * @param saveManager How to load and save
+     */
     public Game(ISaveFileManager saveManager){
         SaveManager = saveManager;
         ResetGame();
     }
 
+    /**
+     * Does one frame and calculates everything in it.
+     * @param bearing how much the player moves to the left or right
+     * @return false if game over
+     */
     protected boolean DoFrame(float bearing){
         boolean collision = false;
 
@@ -86,22 +114,37 @@ public class Game {
         return !collision;
     }
 
+    /**
+     * Returns all current meteorites
+     */
     public ArrayList<Meteorite> GetMeteorites(){
         return Meteorites;
     }
 
+    /**
+     * Returns current Player
+     */
     public Player GetPlayer(){
         return PlayerInstance;
     }
 
+    /**
+     * Returns current score
+     */
     public int GetScore(){
         return Score;
     }
 
+    /**
+     * Returns current Highscore
+     */
     public int GetHighScore(){
         return HighScore;
     }
 
+    /**
+     * Resets the current game
+     */
     public void ResetGame(){
         Score = 0;
         HighScore = SaveManager.LoadGame().GetHighscore();

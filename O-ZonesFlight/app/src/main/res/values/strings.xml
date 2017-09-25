@@ -11,6 +11,6 @@
     <string name="saved_high_score">0</string>
     <string name="txt_devby">Developed by</string>
     <string name="txt_creditssite">Visit <a href='http:\\onebit-software.ch'>onebit-software.ch</a> for more information.</string>
-    <string name="txt_creditsseealso">Please also look at the PC version of O-Zone! \nA brand new game ready for you to play. \n<a href='http:\\onebit.itch.io/o-zone'>onebit.itch.io/o-zone</a></string>
+    <string name="txt_creditsseealso">Please also look at the PC version of O-Zone! \nA brand new game ready for you to play. \n<a href='http:\\onebit.itch.io/o-zone'>onebit.itch.io/o-zone</a>\n\nSpecial thanks to Jonas Fendriger and Remo Hösli for helping us with the soundtrack!</string>
     <string name="txt_back">Back</string>
 </resources>
