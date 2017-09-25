@@ -9,13 +9,10 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.hardware.GeomagneticField;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,7 +52,6 @@ public class UIController extends Activity {
     private OrientationSensorListener OrientationSensor;
     private float[] Gravity;
     private float[] Magnetic_Field;
-    TextView scoreDisplay;
     /**
      * Called upon creation of the Activity. A.K.A. Application start/resume
      * The initialisation of the UI happens here
@@ -87,7 +83,7 @@ public class UIController extends Activity {
 
         //Initialize Sprites
         oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ozone_character);
-        meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.meteor);
+        meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.meteorite);
 
         // Switch to GameMenu State
         GameMenu();
@@ -113,7 +109,7 @@ public class UIController extends Activity {
         }
     }
     /**
-     * Makes the game progress while it's running.
+     * Applies a single Tick of a span defined in Settings.Gameplay_MillisecondsPerFrame.
      * Called by the GameTimer each tick.
      */
     protected void GameTick(){
@@ -181,12 +177,15 @@ public class UIController extends Activity {
             GameOver();
         } else{
             // Update Score
+            TextView scoreDisplay = (TextView)findViewById(R.id.tex_score);
             scoreDisplay.setText(String.valueOf(GameInstance.GetScore()));
         }
     }
 
     /**
-     * Initiates the Game
+     * Sets the UIController to the Running state and applies changes partially.
+     * Requires some value obtained after the layout is done. because of that it is
+     * continued in LayoutDoneCallback()
      */
     public void GameStart(){
         // Set layout and state
@@ -195,15 +194,16 @@ public class UIController extends Activity {
 
         //Reset existing game status
         GameInstance.ResetGame();
-        scoreDisplay = (TextView)findViewById(R.id.tex_score);
-        //
+
         canvasContainer = (ImageView) findViewById(R.id.img_canvas);
         canvasContainer.getViewTreeObserver().addOnGlobalLayoutListener(new CanvasLayoutListener(this, canvasContainer));
         // Continue rest once the canvas is available on the LayoutDoneCallback
     }
 
     /**
-     * Layout has been finished, the game screen size calculated. Game Loop can now be started
+     * Callback for the GameStart UI update. The Game-Loop needs the UI values before starting,
+     * which can only be retrieved once the UI has been drawn.
+     * Can be seen as direct continuation of GameStart()
      * @param display The bitmap representing the display
      */
     public void LayoutDoneCallback(Bitmap display){
@@ -221,7 +221,9 @@ public class UIController extends Activity {
         GameTimer.schedule(TickWrapper, 0, Settings.Gameplay_MillisecondsPerFrame);
     }
 
-
+    /**
+     * Sets the UIController to the GameOver state and applies chages accordingly
+     */
     public void GameOver(){
         // Set layout and state
 
@@ -248,13 +250,16 @@ public class UIController extends Activity {
                         GameInstance.GetScore()));
     }
 
+    /**
+     * Sets the UIController to the Credits state und applies changes accordingly
+     */
     public void GameCredits(){
         setContentView(R.layout.lay_gamecredits);
         State = UIControllerState.Credits;
     }
 
     /**
-     * Sets the UIManage into the GameMenu state and applies changes accordingly
+     * Sets the UIController into the GameMenu state and applies changes accordingly
      */
     public void GameMenu(){
         // Set layout and state
@@ -271,10 +276,21 @@ public class UIController extends Activity {
                         GameInstance.GetHighScore()));
     }
 
-
+    /**
+     * Callback for the Gravity sensor.
+     * @param values The newly calculated gravity values
+     */
     public void setGravity(float[] values){ Gravity = values; }
+
+    /**
+     * Callback for the Magnetic Field sensor
+     * @param values new magnetic field values
+     */
     public void setMagField(float[] values){ Magnetic_Field = values; }
 
+    /**
+     * Initializes music for the game
+     */
     public void InitializeMusic(){
         player = MediaPlayer.create(this, R.raw.apocalypse);
         player.setLooping(true); // Set looping
@@ -282,6 +298,9 @@ public class UIController extends Activity {
         player.start();
     }
 
+    /**
+     * Pauses music from the mediaplayer.
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -289,7 +308,7 @@ public class UIController extends Activity {
     }
 
     /**
-     *
+     * Resumes music from the mediaplayer.
      */
     @Override
     protected void onResume() {
