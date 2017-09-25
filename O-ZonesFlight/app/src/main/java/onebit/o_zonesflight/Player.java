@@ -22,10 +22,10 @@ public class Player {
         if(bearing >= -Settings.Inputs_DeathZone && bearing <= Settings.Inputs_DeathZone)
             bearing = 0;
         //Rounds if to big number
-        if(bearing > 1)
-            bearing = 1;
-        else if(bearing < -1)
-            bearing = -1;
+        if(bearing > Settings.Inputs_MaxInput)
+            bearing = Settings.Inputs_MaxInput;
+        else if(bearing < -Settings.Inputs_MaxInput)
+            bearing = -Settings.Inputs_MaxInput;
         //Sets position
         float movement = Settings.Player_MaxMovement * bearing;
         Position = Position + movement;

@@ -10,7 +10,7 @@ public class Settings {
     protected final static float Gameplay_VelocityIncrease = 1.1f;
     protected final static int Gameplay_MillisecondsPerFrame = 33;
     //***Player***
-    protected final static int Player_MaxMovement = 5;
+    protected final static int Player_MaxMovement = 40;
     protected final static int Player_Height = 10;
     protected final static int Player_Width = 20;
     //***Meteorites***
@@ -21,5 +21,6 @@ public class Settings {
     protected final static int Environment_LineCount = 3;
     protected final static int Environment_LineWidth = Environment_Width / Environment_LineCount;
     //***Inputs***
-    protected final static float Inputs_DeathZone = 0.1f;
+    protected final static float Inputs_DeathZone = 0.02f;
+    protected final static float Inputs_MaxInput = 0.3f;
 }
