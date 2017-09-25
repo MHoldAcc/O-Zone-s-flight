@@ -47,6 +47,7 @@ public class UIController extends Activity {
     private Bitmap meteor;
 
     //Resources
+    private MediaPlayer player = null;
     private Bitmap display;
     private Canvas canvas;
     private ImageView canvasContainer;
@@ -101,6 +102,7 @@ public class UIController extends Activity {
         switch (sender.getId()){
             case R.id.btn_start:    GameStart();    break;
             case R.id.btn_credits:  GameCredits();  break;
+            case R.id.btn_back:     GameMenu();     break;
             // Invalid IDs should throw an exception
             default:
                 Exception ex = new Exception("The ID of the previously clicked button is unknown.");
@@ -246,7 +248,8 @@ public class UIController extends Activity {
     }
 
     public void GameCredits(){
-
+        setContentView(R.layout.lay_gamecredits);
+        State = UIControllerState.Credits;
     }
 
     /**
@@ -267,14 +270,9 @@ public class UIController extends Activity {
                         GameInstance.GetHighScore()));
     }
 
-    private MediaPlayer player = null;
 
-    public void setGravity(float[] values){
-        Gravity = values;
-    }
-    public void setMagField(float[] values){
-        Magnetic_Field = values;
-    }
+    public void setGravity(float[] values){ Gravity = values; }
+    public void setMagField(float[] values){ Magnetic_Field = values; }
 
     public void InitializeMusic(){
         player = MediaPlayer.create(this, R.raw.apocalypse);

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_devby"
+        android:inputType="none"
+        android:id="@+id/devby"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dim_margin_menu" />
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginEnd="@dimen/dim_margin_menu"
+        android:layout_marginStart="@dimen/dim_margin_menu"
+        android:id="@+id/onebitlogo"
+        android:layout_below="@+id/devby"
+        android:src="@mipmap/onebit_logo"
+        android:layout_marginTop="@dimen/dim_margin_view" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="none"
+        android:id="@+id/sitetext"
+        android:layout_marginTop="@dimen/dim_margin_view"
+        android:layout_marginEnd="@dimen/dim_margin_menu"
+        android:layout_marginStart="@dimen/dim_margin_menu"
+        android:layout_below="@+id/onebitlogo"
+        android:text="@string/txt_creditssite"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="none"
+        android:id="@+id/sitemore"
+        android:layout_marginTop="@dimen/dim_margin_view"
+        android:layout_marginEnd="@dimen/dim_margin_menu"
+        android:layout_marginStart="@dimen/dim_margin_menu"
+        android:layout_below="@+id/sitetext"
+        android:text="@string/txt_creditsseealso"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/dim_button_width"
+        android:text="@string/txt_back"
+        android:id="@+id/btn_back"
+        android:layout_marginBottom="@dimen/dim_margin_menu"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="OnClickHandler"/>
+
+
+</RelativeLayout>
