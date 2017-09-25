@@ -39,7 +39,7 @@ public class Game {
             meteor.SetLatitude(meteor.GetLatitude() - Settings.Meteorites_Movement * currentVelocity);
 
             //Removes meteorite if Latitude is under 0
-            if(meteor.GetLatitude() <= 0) {
+            if(meteor.GetLatitude() <= 10) {
                 meteoriteToRemove = meteor;
             }
             //Checks for collisions
