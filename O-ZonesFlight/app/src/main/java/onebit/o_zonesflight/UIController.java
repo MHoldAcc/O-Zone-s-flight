@@ -233,10 +233,11 @@ public class UIController extends Activity {
                         GameInstance.GetHighScore()));
     }
 
-
+    private static BackgroundMusic backgroundMusic;
 
     public void InitializeMusic(){
-        //TODO make music run or something liek taht.
+        backgroundMusic = new BackgroundMusic(this);
+        backgroundMusic.doInBackground();
     }
     private PointF TranslatePlayerPos(Player player, Bitmap display){
         return new PointF(
