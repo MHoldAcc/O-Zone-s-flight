@@ -70,7 +70,7 @@ public class Game {
                 Random rand = new Random();
                 int randomNum = rand.nextInt((Settings.Environment_LineCount - 1) + 1) + 1;
                 Meteorite meteor = new Meteorite(randomNum);
-                meteor.SetLatitude(Settings.Player_Height);
+                meteor.SetLatitude(Settings.Environment_Height);
                 Meteorites.add(meteor);
                 timeTillNextMeteorite = Settings.Gameplay_TimeTillNewMeteorite;
             }
