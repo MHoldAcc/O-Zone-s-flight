@@ -20,7 +20,9 @@
         android:layout_marginEnd="@dimen/dim_margin_menu"
         android:layout_alignParentEnd="true"
         android:focusable="false"
-        android:inputType="none"/>
+        android:inputType="none"
+        android:text="TEST"
+        android:id="@+id/tex_score"/>
 
     <ImageView
         android:layout_width="match_parent"
