@@ -56,8 +56,10 @@ public class Game {
         if(meteoriteToRemove != null)
             Meteorites.remove(meteoriteToRemove);
 
-        if(collision && Score > HighScore)
+        if(collision && Score > HighScore){
             SaveManager.SaveGame(new SavedState(Score));
+            HighScore = SaveManager.LoadGame().GetHighscore();
+        }
         else{
             //Adds Score
             Score = Score + Settings.Gameplay_MillisecondsPerFrame;
