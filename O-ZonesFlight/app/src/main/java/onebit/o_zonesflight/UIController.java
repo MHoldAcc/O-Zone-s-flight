@@ -10,7 +10,6 @@ import android.graphics.PointF;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -220,7 +219,7 @@ public class UIController extends Activity {
      */
     public void GameMenu(){
         // Set layout and state
-        setContentView(R.layout.lay_gamestartforcerename);
+        setContentView(R.layout.lay_gamestart);
         State = UIControllerState.MainMenu;
 
         //load highscore
