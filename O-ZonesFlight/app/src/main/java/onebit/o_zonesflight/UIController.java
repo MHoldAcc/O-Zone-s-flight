@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,7 +48,8 @@ public class UIController extends Activity {
     private Bitmap display;
     private Canvas canvas;
     private ImageView canvasContainer;
-    private float meteorWidth;
+    private GameSensorListener sensorListener;
+    private float inputBearing;
     /**
      * Called upon creation of the Activity. A.K.A. Application start/resume
      * The initialisation of the UI happens here
@@ -57,8 +61,11 @@ public class UIController extends Activity {
         super.onCreate(savedInstanceState);
 
         //Initialize sensor
-        Sensor = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
+        if (sensorListener == null) {
+            sensorListener = new GameSensorListener(this);
+            Sensor = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            Sensor.registerListener(sensorListener, Sensor.getDefaultSensor(android.hardware.Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_GAME);
+        }
         // TODO: finish it
 
         //Initialize SaveFileManager
@@ -110,36 +117,43 @@ public class UIController extends Activity {
         //Player
         //Calculate position
         PointF pos = TranslatePlayerPos(GameInstance.GetPlayer(), display);
-        /*
-        PointF pos = TranslatePlayerPos(
-                new PointF(GameInstance.GetPlayer().GetPosition(),100),
-                oZone, display);
-                */
         //Draw Player
         canvas.drawBitmap(
                 oZone,
-                pos.x,
-                pos.y,
+                new Rect(
+                        0,
+                        0,
+                        oZone.getWidth(),
+                        oZone.getHeight()),
+                new RectF(
+                        pos.x,
+                        pos.y,
+                        pos.x + display.getWidth() * (Settings.Player_Width / (float)Settings.Environment_Width),
+                        pos.y + display.getHeight() * (Settings.Player_Height / (float)Settings.Environment_Height)),
                 null);
-
+        //Iterate meteorites
         for (Meteorite m: GameInstance.GetMeteorites()) {
+            //Calculate
             pos = TranslateMeteorPos(m, display);
-            canvas.drawBitmap(meteor,
-                    pos.x,
-                    pos.y,
+            canvas.drawBitmap(
+                    meteor,
+                    new Rect(
+                            0,
+                            0,
+                            meteor.getWidth(),
+                            meteor.getHeight()),
+                    new RectF(
+                            pos.x,
+                            pos.y,
+                            pos.x + display.getWidth() / Settings.Environment_LineCount,
+                            pos.y + display.getWidth() / Settings.Environment_LineCount/* + display.getHeight() * (Settings.Player_Height / (float)Settings.Environment_Height)*/),
                     null);
         }
 
         canvasContainer.invalidate();
 
-        float bearing = 0;
 
-
-
-        //TODO read Bearing;
-
-        bearing = Math.max(-1, Math.min(1, bearing));
-        boolean result = GameInstance.DoFrame(bearing);
+        boolean result = GameInstance.DoFrame(inputBearing);
         if (!result)
         {
             TickWrapper.cancel();
@@ -173,7 +187,6 @@ public class UIController extends Activity {
         this.display = display;
         final Handler mainHandler = new Handler(getMainLooper());
         canvas = new Canvas(display);
-        meteorWidth = display.getWidth() / Settings.Environment_LineCount;
         GameTimer = new Timer();
         TickWrapper = new TimerTask() {
             @Override
@@ -204,7 +217,7 @@ public class UIController extends Activity {
         //load score
 
         TextView scoreText = (TextView) findViewById(R.id.tex_score);
-        highScoreText.setText(
+        scoreText.setText(
                 String.format(
                         Locale.getDefault(),
                         "%s: %d",
@@ -238,6 +251,10 @@ public class UIController extends Activity {
 
     public void InitializeMusic(){
         //TODO make music run or something liek taht.
+    }
+
+    public void SensorCallback(float newValue){
+
     }
     private PointF TranslatePlayerPos(Player player, Bitmap display){
         return new PointF(
