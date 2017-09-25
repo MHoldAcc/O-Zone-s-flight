@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -234,11 +235,13 @@ public class UIController extends Activity {
                         GameInstance.GetHighScore()));
     }
 
-    private static BackgroundMusic backgroundMusic;
+    private MediaPlayer player = null;
 
     public void InitializeMusic(){
-        backgroundMusic = new BackgroundMusic(this);
-        backgroundMusic.doInBackground();
+        player = MediaPlayer.create(this, R.raw.apocalypse);
+        player.setLooping(true); // Set looping
+        player.setVolume(1.0f, 1.0f);
+        player.start();
     }
     private PointF TranslatePlayerPos(Player player, Bitmap display){
         return new PointF(
