@@ -14,7 +14,7 @@ public class Settings {
     protected static int Player_Height = 10;
     protected static int Player_Width = 20;
     //***Meteorites***
-    protected static int Meteorites_Movement = 5;
+    protected static int Meteorites_Movement = 1;
     //***Environment Sizes***
     protected static int Environment_Width = 100;
     protected static int Environment_Height = 100;

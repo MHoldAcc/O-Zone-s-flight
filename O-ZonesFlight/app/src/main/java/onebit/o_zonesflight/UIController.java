@@ -6,20 +6,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
-import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Display;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.InvocationHandler;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,7 +45,7 @@ public class UIController extends Activity {
     //Resources
     private Bitmap display;
     private Canvas canvas;
-
+    private ImageView canvasContainer;
     /**
      * Called upon creation of the Activity. A.K.A. Application start/resume
      * The initialisation of the UI happens here
@@ -114,9 +109,12 @@ public class UIController extends Activity {
 
         //Player
         //Calculate position
-        PointF pos = TranslatePosition(
+        PointF pos = TranslatePlayerPos(GameInstance.GetPlayer(), display);
+        /*
+        PointF pos = TranslatePlayerPos(
                 new PointF(GameInstance.GetPlayer().GetPosition(),100),
                 oZone, display);
+                */
         //Draw Player
         canvas.drawBitmap(
                 oZone,
@@ -124,7 +122,15 @@ public class UIController extends Activity {
                 pos.y,
                 null);
 
-        findViewById(R.id.img_canvas).invalidate();
+        for (Meteorite m: GameInstance.GetMeteorites()) {
+            pos = TranslateMeteorPos(m, display);
+            canvas.drawBitmap(meteor,
+                    pos.x,
+                    pos.y,
+                    null);
+        }
+
+        canvasContainer.invalidate();
 
         float bearing = 0;
 
@@ -154,7 +160,7 @@ public class UIController extends Activity {
         GameInstance.ResetGame();
 
         //
-        ImageView canvasContainer = (ImageView) findViewById(R.id.img_canvas);
+        canvasContainer = (ImageView) findViewById(R.id.img_canvas);
         canvasContainer.getViewTreeObserver().addOnGlobalLayoutListener(new CanvasLayoutListener(this, canvasContainer));
         // Continue rest once the canvas is available on the LayoutDoneCallback
     }
@@ -175,7 +181,7 @@ public class UIController extends Activity {
             }
         };
 
-        GameTimer.schedule(TickWrapper, 0, 33);
+        GameTimer.schedule(TickWrapper, 0, Settings.Gameplay_MillisecondsPerFrame);
     }
 
 
@@ -214,7 +220,7 @@ public class UIController extends Activity {
      */
     public void GameMenu(){
         // Set layout and state
-        setContentView(R.layout.lay_gamestart);
+        setContentView(R.layout.lay_gamestartforcerename);
         State = UIControllerState.MainMenu;
 
         //load highscore
@@ -232,13 +238,15 @@ public class UIController extends Activity {
     public void InitializeMusic(){
         //TODO make music run or something liek taht.
     }
-
-
-    private PointF TranslatePosition(PointF pos, Bitmap image, Bitmap display){
-        float availableWidth = display.getWidth() - image.getWidth();
-        float availableHeight = display.getHeight() - image.getHeight();
+    private PointF TranslatePlayerPos(Player player, Bitmap display){
         return new PointF(
-                pos.x / 100 * availableWidth,
-                pos.y / 100 * availableHeight);
+                player.GetPosition() / Settings.Environment_Width * (display.getWidth() - oZone.getWidth()),
+                display.getHeight() - oZone.getHeight());
+    }
+    private PointF TranslateMeteorPos(Meteorite m, Bitmap display){
+        return new PointF(
+                (m.GetCourse() * Settings.Environment_LineWidth())  / Settings.Environment_Width * (display.getWidth() - meteor.getWidth()),
+                (Settings.Environment_Height-m.GetLatitude())       / Settings.Environment_Height * (display.getHeight() - meteor.getHeight())
+        );
     }
 }
