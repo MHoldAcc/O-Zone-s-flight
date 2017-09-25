@@ -1,7 +1,9 @@
 package onebit.o_zonesflight;
 
 /**
- * Created by admin on 20.09.2017.
+ * Created by Michael on 20.09.2017.
+ * Tis class delivers the constant settings of the application
+ * Modify if you feel adventurous ;)
  */
 public class Settings {
     //***Gameplay***

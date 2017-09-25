@@ -4,15 +4,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Created by admin on 20.09.2017.
+ * Created by Michael on 20.09.2017.
  */
 public class LocalSaveFileManager implements ISaveFileManager {
-    private String SaveFile;
-
+    /**
+     * Initializes and sets UI Controller
+     * @param uiController UIController to set
+     */
     public LocalSaveFileManager(UIController uiController){
         SetUIController(uiController);
     }
 
+    /**
+     * Sets UI Controller
+     * @param uiController UIController to set
+     */
     public void SetUIController(UIController uiController){
         controller = uiController;
     }
@@ -33,5 +39,8 @@ public class LocalSaveFileManager implements ISaveFileManager {
         editor.commit();
     }
 
+    /**
+     * UI Controller to use for saving
+     */
     private static UIController controller = null;
 }
