@@ -1,5 +1,5 @@
 # O-Zone-s-flight
-Rette die Menschheit als O-Zone! Begieb dich auf eine Reise ins Weltall.
+Rette die Menschheit als O-Zone! Begib dich auf eine Reise ins Weltall.
 
 In O-Zone's Flight steuerst du O-Zone, welcher im All schwebt und Meteoriten ausweichen muss.
 Bewege O-Zone indem du dein Mobiltelefon nach Links oder Rechts neigst.
