@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">O-Zone\'s flight</string>
+    <string name="app_name">O-Zone\'s Flight</string>
     <string name="txt_highscore">Highscore</string>
     <string name="txt_credits">Credits</string>
     <string name="txt_startgame">Start Game</string>
