@@ -26,7 +26,6 @@ import java.util.TimerTask;
  * Depending on the state the UI will change.
  */
 public class UIController extends Activity {
-    private SensorManager Sensor;
 
     /** The reference to the Game. */
     private Game GameInstance;
@@ -77,8 +76,8 @@ public class UIController extends Activity {
         Magnetic_Field = new float[3];
 
         //Initialize sensor
-        Sensor = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        new OrientationSensorListener(this, Sensor);
+        SensorManager sensor = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        new OrientationSensorListener(this, sensor);
 
 
         //Initialize SaveFileManager
