@@ -1,0 +1,13 @@
+.row{
+    margin: 15px;
+}
+
+.content{
+    padding: 30px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+}
+
+img{
+    padding: 50px;
+}
