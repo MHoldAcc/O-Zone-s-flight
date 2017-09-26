@@ -36,7 +36,7 @@ public class LocalSaveFileManager implements ISaveFileManager {
         SharedPreferences sharedPref = controller.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(controller.getString(R.string.saved_high_score), savedState.GetHighscore());
-        editor.commit();
+        editor.apply();
     }
 
     /**
