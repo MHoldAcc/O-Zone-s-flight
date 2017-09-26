@@ -9,11 +9,11 @@ import android.widget.ImageView;
  * Upon finishing a Callback is invoked on the UIController
  * Created by Silvan Pfister on 20.09.2017.
  */
-public class CanvasLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
+class CanvasLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
     /** The UIController on which the callback is invoked */
-    private UIController owner;
+    private final UIController owner;
     /** The ImageView which serves as a canvas */
-    private ImageView canvasContainer;
+    private final ImageView canvasContainer;
 
     /**
      * Creates an instance of the CanvasLayoutListener.

@@ -149,7 +149,7 @@ public class Game {
         Score = 0;
         HighScore = SaveManager.LoadGame().GetHighscore();
         PlayerInstance = new Player();
-        Meteorites = new ArrayList<Meteorite>();
+        Meteorites = new ArrayList<>();
         timeTillNextMeteorite = 0;
         timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
         currentVelocity = 1;

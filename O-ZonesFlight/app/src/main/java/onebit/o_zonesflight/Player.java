@@ -13,8 +13,7 @@ public class Player {
      * Initializes players
      */
     public Player(){
-        int position = (int) (Settings.Environment_Width / 2);
-        Position = (long)position;
+        Position = Settings.Environment_Width / 2;
     }
 
     /**

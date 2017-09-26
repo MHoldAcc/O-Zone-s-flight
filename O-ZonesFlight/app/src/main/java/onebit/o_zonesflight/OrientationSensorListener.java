@@ -10,7 +10,7 @@ import android.util.Log;
  * A SensorEventListener which is used to provide the UIController with the required data to get the device orientation.
  * Created by Silvan Pfister on 25.09.2017.
  */
-public class OrientationSensorListener implements SensorEventListener {
+class OrientationSensorListener implements SensorEventListener {
     /**
      * The Tag for Debugging logs.
      */
@@ -19,7 +19,7 @@ public class OrientationSensorListener implements SensorEventListener {
     /**
      * The UIController which requires the Sensor Data
      */
-    private UIController owner;
+    private final UIController owner;
 
     /**
      * Creates an instance of the OrientationSensorListener
@@ -27,8 +27,8 @@ public class OrientationSensorListener implements SensorEventListener {
      * @param sensor The Sensor that will use the sensor data to provide orientation data
      */
     public OrientationSensorListener(UIController owner, SensorManager sensor){
-        sensor.registerListener(this, sensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sensor.SENSOR_DELAY_GAME);
-        sensor.registerListener(this, sensor.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), sensor.SENSOR_DELAY_GAME);
+        sensor.registerListener(this, sensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+        sensor.registerListener(this, sensor.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
         this.owner = owner;
     }
 
@@ -45,7 +45,7 @@ public class OrientationSensorListener implements SensorEventListener {
             case Sensor.TYPE_MAGNETIC_FIELD:
                 owner.setMagField(event.values);
                 break;
-            default: Log.e(TAG, "Unknown Sensor Type: " + event.sensor.getType()); return;
+            default: Log.e(TAG, "Unknown Sensor Type: " + event.sensor.getType());
         }
     }
 

@@ -4,7 +4,7 @@ package onebit.o_zonesflight;
  * Class is a Runnable that simply calls the Gametick on the uicontroller.
  * Created by silvan pfister on 20.09.2017.
  */
-public class GameTickRunnable implements Runnable {
+class GameTickRunnable implements Runnable {
 
     private final UIController owner;
 

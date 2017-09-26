@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -59,8 +58,6 @@ public class UIController extends Activity {
     private Canvas canvas;
     /** ImageView which renders the game */
     private ImageView canvasContainer;
-    /** Provides data required to read the orientation of the device */
-    private OrientationSensorListener OrientationSensor;
     /** Data required to read the orientation of the device */
     private float[] Gravity;
     /** Data required to read the orientation of the device */
@@ -81,11 +78,10 @@ public class UIController extends Activity {
 
         //Initialize sensor
         Sensor = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        OrientationSensor = new OrientationSensorListener(this, Sensor);
+        new OrientationSensorListener(this, Sensor);
 
 
         //Initialize SaveFileManager
-        String saveFile = getResources().getString(R.string.txt_defaultsavefile);
         ISaveFileManager saveFileManager = new LocalSaveFileManager(this);
 
         //Initialize Game & Load Data
@@ -126,7 +122,7 @@ public class UIController extends Activity {
      * Applies a single Tick of a span defined in Settings.Gameplay_MillisecondsPerFrame.
      * Called by the GameTimer each tick.
      */
-    protected void GameTick(){
+    void GameTick(){
 
         //Clear Screen
         canvas.drawBitmap(
@@ -186,12 +182,10 @@ public class UIController extends Activity {
         float[] Rota = new float[9];
         float[] I = new float[9];
         float[] values = new float[3];
-        Sensor.getRotationMatrix(Rota,I,Gravity, Magnetic_Field);
-        Sensor.getOrientation(Rota,values);
+        SensorManager.getRotationMatrix(Rota,I,Gravity, Magnetic_Field);
+        SensorManager.getOrientation(Rota,values);
 
         // Format sensor data
-        float azi = values[0] / (float)Math.PI;
-        float pitch = 2 * values[1] / (float)Math.PI;
         float roll = values[2] / (float)Math.PI;
 
         //Do Game Tick
@@ -317,7 +311,7 @@ public class UIController extends Activity {
     /**
      * Initializes music for the game
      */
-    public void InitializeMusic(){
+    private void InitializeMusic(){
         player = MediaPlayer.create(this, R.raw.apocalypse);
         player.setLooping(true); // Set looping
         player.setVolume(1.0f, 1.0f);

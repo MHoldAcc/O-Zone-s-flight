@@ -8,11 +8,11 @@ public interface ISaveFileManager {
      * Loads save state
      * @return save state loaded
      */
-    public SavedState LoadGame();
+    SavedState LoadGame();
 
     /**
      * Saves save state
      * @param savedState save state to save
      */
-    public void SaveGame(SavedState savedState);
+    void SaveGame(SavedState savedState);
 }
