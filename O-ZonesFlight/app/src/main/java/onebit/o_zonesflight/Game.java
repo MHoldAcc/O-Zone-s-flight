@@ -88,7 +88,7 @@ public class Game {
             SaveManager.SaveGame(new SavedState(Score));
             HighScore = SaveManager.LoadGame().GetHighscore();
         }
-        else{
+        else if (!collision){
             //Adds Score
             Score = Score + Settings.Gameplay_MillisecondsPerFrame;
             //Sets time till
