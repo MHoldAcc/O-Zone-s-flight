@@ -1,43 +1,32 @@
 package onebit.o_zonesflight;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by Michael on 20.09.2017.
  */
 public class Game {
-    /**
-     * The time till the next meteorite strikes
-     */
+    /** The time till the next meteorite strikes */
     private int timeTillNextMeteorite;
-    /**
-     * The current Velocity of the meteorites
-     */
+    /** The current Velocity of the meteorites */
     private float currentVelocity;
-    /**
-     * The time till the next increase of velocity
-     */
+    /** The time till the next increase of velocity */
     private int timeTillVelocityIncrease;
-    /**
-     * All current meteorites
-     */
+    /** All current meteorites */
     private ArrayList<Meteorite> Meteorites;
-    /**
-     * The current player
-     */
+    /** All current coins */
+    private ArrayList<Coin> Coins;
+    /** The current player */
     private Player PlayerInstance;
-    /**
-     * The current score
-     */
+    /** The current money */
+    private int Money;
+    /** The current score */
     private int Score;
-    /**
-     * The current highscore
-     */
+    /** The current highscore */
     private int HighScore;
-    /**
-     * Manages saving and loading
-     */
+    /** Manages saving and loading */
     private ISaveFileManager SaveManager;
 
     /**
@@ -60,29 +49,48 @@ public class Game {
         //Moves Player
         PlayerInstance.ApplyBearing(bearing);
 
-        Meteorite meteoriteToRemove = null;
+        ArrayList<Meteorite> meteoriteToRemove = new ArrayList<>();
+        ArrayList<Coin> coinsToRemove = new ArrayList<>();
+
+        for (Coin coin : Coins){
+            coin.SetY(coin.GetY() - Settings.Coin_Movement * currentVelocity);
+            if (coin.GetY() + coin.GetHeight() < Settings.Environment_Height) {
+                float distX, distY;
+                distX = PlayerInstance.GetX() + PlayerInstance.GetWidth() / 2 - coin.GetX() - coin.GetWidth() / 2;
+                distY = PlayerInstance.GetY() + PlayerInstance.GetHeight() / 2 - coin.GetY() - coin.GetHeight() / 2;
+                float dist = (float) Math.sqrt(distX * distX + distY * distY) -
+                        Math.max(coin.GetHeight(), coin.GetWidth()) / 2 -
+                        Math.max(PlayerInstance.GetHeight(), PlayerInstance.GetWidth()) / 2;
+                if (dist <= 0) {
+                    coinsToRemove.add(coin);
+                    Money++;
+                }
+            } else{
+                coinsToRemove.add(coin);
+            }
+        }
 
         //Moves existing Meteorites
         for (Meteorite meteor:Meteorites){
             meteor.SetLatitude(meteor.GetLatitude() - Settings.Meteorites_Movement * currentVelocity);
 
             //Removes meteorite if Latitude is under 0
-            if(meteor.GetLatitude() <= 10) {
-                meteoriteToRemove = meteor;
+            if(meteor.GetLatitude() <= Settings.Meteorites_Height) {
+                meteoriteToRemove.add(meteor);
             }
             //Checks for collisions
             else if(meteor.GetLatitude() - Settings.Meteorites_Height <= Settings.Player_Height){
-                int meteorPositionLeft = (meteor.GetCourse() - 1) * Settings.Environment_LineWidth;
-                int meteorPositionRight = meteor.GetCourse() * Settings.Environment_LineWidth;
-                int playerPositionLeft = (int)PlayerInstance.GetPosition() - Settings.Player_Width / 2;
-                int playerPositionRight = (int)PlayerInstance.GetPosition() + Settings.Player_Width / 2;
+                int meteorPositionLeft = meteor.GetCourse() * Settings.Environment_LineWidth;
+                int meteorPositionRight = meteorPositionLeft + Settings.Environment_LineWidth;
+                int playerPositionLeft = (int)PlayerInstance.GetPosition();
+                int playerPositionRight = (int)PlayerInstance.GetPosition() + Settings.Player_Width;
                 if(meteorPositionLeft <= playerPositionRight && playerPositionLeft <= meteorPositionRight)
                     collision = true;
             }
         }
-        //Removes meteorite if needed
-        if(meteoriteToRemove != null)
-            Meteorites.remove(meteoriteToRemove);
+
+        Coins.removeAll(coinsToRemove);
+        Meteorites.removeAll(meteoriteToRemove);
 
         if(collision && Score > HighScore){
             SaveManager.SaveGame(new SavedState(Score));
@@ -92,8 +100,8 @@ public class Game {
             //Adds Score
             Score = Score + Settings.Gameplay_MillisecondsPerFrame;
             //Sets time till
-            timeTillNextMeteorite = timeTillNextMeteorite - Settings.Gameplay_MillisecondsPerFrame;
-            timeTillVelocityIncrease = timeTillVelocityIncrease - Settings.Gameplay_MillisecondsPerFrame;
+            timeTillNextMeteorite -= Settings.Gameplay_MillisecondsPerFrame;
+            timeTillVelocityIncrease -= Settings.Gameplay_MillisecondsPerFrame;
 
             //Add Meteorite if needed
             if(timeTillNextMeteorite <= 0) {
@@ -107,7 +115,7 @@ public class Game {
             //Sets velocity
             if(timeTillVelocityIncrease <= 0){
                 timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
-                currentVelocity = currentVelocity * Settings.Gameplay_VelocityIncrease;
+                currentVelocity *= Settings.Gameplay_VelocityIncrease;
             }
         }
 
@@ -120,6 +128,8 @@ public class Game {
     public ArrayList<Meteorite> GetMeteorites(){
         return Meteorites;
     }
+
+    public ArrayList<Coin> GetCoins() { return Coins; }
 
     /**
      * Returns current Player

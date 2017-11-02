@@ -1,9 +1,11 @@
 package onebit.o_zonesflight;
 
+import android.graphics.PointF;
+
 /**
  * Created by Michael on 20.09.2017.
  */
-public class Player {
+public class Player implements IRenderable {
     /**
      * Current position longitude of player
      */
@@ -13,7 +15,7 @@ public class Player {
      * Initializes players
      */
     public Player(){
-        Position = Settings.Environment_Width / 2;
+        Position = Settings.Environment_Width / 2 - Settings.Player_Width / 2;
     }
 
     /**
@@ -45,4 +47,19 @@ public class Player {
         else if (Position < 0)
             Position = 0;
     }
+
+    @Override
+    public PointF GetPos() { return new PointF(GetX(),GetY()); }
+
+    @Override
+    public float GetX() { return GetPosition(); }
+
+    @Override
+    public float GetY() { return Settings.Player_Height; }
+
+    @Override
+    public float GetWidth() { return Settings.Player_Width; }
+
+    @Override
+    public float GetHeight() { return Settings.Player_Height; }
 }

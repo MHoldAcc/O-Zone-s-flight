@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.SensorManager;
@@ -47,6 +46,8 @@ public class UIController extends Activity {
     private Bitmap bmp_meteor;
     /** The Background Sprite */
     private Bitmap bmp_space;
+    /** The Coin (1) Sprite */
+    private Bitmap bmp_coin1;
 
     //Resources
     /** The Music Player */
@@ -93,6 +94,7 @@ public class UIController extends Activity {
         bmp_oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ozone_character);
         bmp_meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.meteorite);
         bmp_space = BitmapFactory.decodeResource(getResources(),R.mipmap.space);
+        bmp_coin1 = BitmapFactory.decodeResource(getResources(), R.mipmap.coin_1);
 
         // Switch to GameMenu State
         GameMenu();
@@ -141,7 +143,7 @@ public class UIController extends Activity {
 
         //Player
         //Calculate position
-        PointF pos = TranslatePlayerPos(GameInstance.GetPlayer(), display);
+        RectF pos = TranslateRenderablePos(GameInstance.GetPlayer(), display);
         //Draw Player
         canvas.drawBitmap(
                 bmp_oZone,
@@ -150,16 +152,12 @@ public class UIController extends Activity {
                         0,
                         bmp_oZone.getWidth(),
                         bmp_oZone.getHeight()),
-                new RectF(
-                        pos.x,
-                        pos.y,
-                        pos.x + display.getWidth() * (Settings.Player_Width / (float)Settings.Environment_Width),
-                        pos.y + display.getHeight() * (Settings.Player_Height / (float)Settings.Environment_Height)),
+                pos,
                 null);
         //Iterate meteorites
         for (Meteorite m: GameInstance.GetMeteorites()) {
             //Calculate
-            pos = TranslateMeteorPos(m, display);
+            pos = TranslateRenderablePos(m, display);
             canvas.drawBitmap(
                     bmp_meteor,
                     new Rect(
@@ -167,11 +165,18 @@ public class UIController extends Activity {
                             0,
                             bmp_meteor.getWidth(),
                             bmp_meteor.getHeight()),
-                    new RectF(
-                            pos.x,
-                            pos.y,
-                            pos.x + display.getWidth() / Settings.Environment_LineCount,
-                            pos.y + display.getWidth() / Settings.Environment_LineCount/* + display.getHeight() * (Settings.Player_Height / (float)Settings.Environment_Height)*/),
+                    pos,
+                    null);
+        }
+        for(Coin c: GameInstance.GetCoins()){
+            pos = TranslateRenderablePos(c, display);
+            canvas.drawBitmap(bmp_coin1,
+                    new Rect(
+                            0,
+                            0,
+                            bmp_coin1.getWidth(),
+                            bmp_coin1.getHeight()),
+                    pos,
                     null);
         }
         // MAke screen refresh
@@ -335,28 +340,13 @@ public class UIController extends Activity {
         player.start();
     }
 
-    /**
-     * Helper method to translate the player position of the game to corresponding display coordinates
-     * @param player The player instance
-     * @param display The display bitmap to render the player on
-     * @return A calculated PointF for the canvas to draw the player at
-     */
-    private PointF TranslatePlayerPos(Player player, Bitmap display){
-        return new PointF(
-                player.GetPosition() / (Settings.Environment_Width + Settings.Player_Width) * display.getWidth(),
-                display.getHeight() - display.getHeight() * Settings.Player_Height / (float)Settings.Environment_Height);
+    private RectF TranslateRenderablePos(IRenderable renderable, Bitmap display){
+        return new RectF(
+                renderable.GetX() / Settings.Environment_Width * display.getWidth(),
+                renderable.GetY() / Settings.Environment_Height * display.getHeight(),
+                (renderable.GetX() + renderable.GetWidth()) / Settings.Environment_Width * display.getWidth(),
+                (renderable.GetY() + renderable.GetHeight()) / Settings.Environment_Height * display.getHeight()
+                );
     }
 
-    /**
-     * Helper method that translates the Game Position to a corresponding position on display.
-     * @param m The Meteorite instance
-     * @param display The display bitmap to render the meteorite on
-     * @return The calculated position for the canvas to draw the meteorite
-     */
-    private PointF TranslateMeteorPos(Meteorite m, Bitmap display){
-        return new PointF(
-                (m.GetCourse()-1) * Settings.Environment_LineWidth / (float)Settings.Environment_Width * display.getWidth(),
-                (Settings.Environment_Height - m.GetLatitude() + Settings.Meteorites_Height - Settings.Player_Height) / Settings.Environment_Height * display.getHeight()
-        );
-    }
 }

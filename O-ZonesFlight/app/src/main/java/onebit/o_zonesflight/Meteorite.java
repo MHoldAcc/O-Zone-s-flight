@@ -1,9 +1,11 @@
 package onebit.o_zonesflight;
 
+import android.graphics.PointF;
+
 /**
  * Created by Michael on 20.09.2017.
  */
-public class Meteorite {
+public class Meteorite implements IRenderable {
 
     /**
      * Current course of the meteorite
@@ -46,4 +48,19 @@ public class Meteorite {
     void SetLatitude(float latitude){
         Latitude = latitude;
     }
+
+    @Override
+    public float GetX() { return GetCourse() * Settings.Environment_LineWidth; }
+
+    @Override
+    public float GetY() { return GetLatitude(); }
+
+    @Override
+    public float GetWidth() { return Settings.Environment_LineWidth; }
+
+    @Override
+    public float GetHeight() { return Settings.Meteorites_Height; }
+
+    @Override
+    public PointF GetPos() { return new PointF(GetX(), GetY()); }
 }
