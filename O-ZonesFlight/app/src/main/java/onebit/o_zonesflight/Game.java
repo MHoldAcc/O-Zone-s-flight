@@ -106,7 +106,7 @@ public class Game {
             //Add Meteorite if needed
             if(timeTillNextMeteorite <= 0) {
                 Random rand = new Random();
-                int randomNum = rand.nextInt((Settings.Environment_LineCount - 1) + 1) + 1;
+                int randomNum = rand.nextInt(Settings.Environment_LineCount);
                 Meteorite meteor = new Meteorite(randomNum);
                 meteor.SetLatitude(Settings.Environment_Height + Settings.Meteorites_Height);
                 Meteorites.add(meteor);
@@ -160,6 +160,7 @@ public class Game {
         HighScore = SaveManager.LoadGame().GetHighscore();
         PlayerInstance = new Player();
         Meteorites = new ArrayList<>();
+        Coins = new ArrayList<>();
         timeTillNextMeteorite = 0;
         timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
         currentVelocity = 1;

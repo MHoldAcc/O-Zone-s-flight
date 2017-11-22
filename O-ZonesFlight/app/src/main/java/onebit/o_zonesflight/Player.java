@@ -1,6 +1,7 @@
 package onebit.o_zonesflight;
 
 import android.graphics.PointF;
+import android.widget.TextView;
 
 /**
  * Created by Michael on 20.09.2017.
@@ -42,10 +43,14 @@ public class Player implements IRenderable {
         //Sets position
         float movement = Settings.Player_MaxMovement * bearing;
         Position = Position + movement;
-        if(Position > Settings.Environment_Width)
-            Position = Settings.Environment_Width;
+        if(Position > Settings.Environment_Width - Settings.Player_Width)
+            Position = Settings.Environment_Width - Settings.Player_Width;
         else if (Position < 0)
             Position = 0;
+
+        TextView tv = new TextView(null);
+
+        tv.setOnTouchListener(null);
     }
 
     @Override

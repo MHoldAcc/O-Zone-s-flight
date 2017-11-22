@@ -11,6 +11,7 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ import java.util.TimerTask;
  * Depending on the state the UI will change.
  */
 public class UIController extends Activity {
+
+    private static final String TAG = "UIC";
 
     /** The reference to the Game. */
     private Game GameInstance;
@@ -343,9 +346,9 @@ public class UIController extends Activity {
     private RectF TranslateRenderablePos(IRenderable renderable, Bitmap display){
         return new RectF(
                 renderable.GetX() / Settings.Environment_Width * display.getWidth(),
-                renderable.GetY() / Settings.Environment_Height * display.getHeight(),
+                display.getHeight()-renderable.GetY() / Settings.Environment_Height * display.getHeight(),
                 (renderable.GetX() + renderable.GetWidth()) / Settings.Environment_Width * display.getWidth(),
-                (renderable.GetY() + renderable.GetHeight()) / Settings.Environment_Height * display.getHeight()
+                display.getHeight()-(renderable.GetY() - renderable.GetHeight()) / Settings.Environment_Height * display.getHeight()
                 );
     }
 
