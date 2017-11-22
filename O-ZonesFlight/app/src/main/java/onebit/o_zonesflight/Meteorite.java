@@ -4,12 +4,14 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 
 /**
+ * This class represents a meteorite.
+ * This sounds incredibly stupid.
  * Created by Michael on 20.09.2017.
  */
 public class Meteorite implements IRenderable, ITickable {
 
     private static Bitmap bmp;
-    public static void setBitmap(Bitmap image){ bmp = image; }
+    static void setBitmap(Bitmap image){ bmp = image; }
 
     /** Current course of the meteorite */
     private int Course;
@@ -24,7 +26,7 @@ public class Meteorite implements IRenderable, ITickable {
      * Initializes Meteorite with course number
      * @param course the number of the course
      */
-    public Meteorite(int course){
+    Meteorite(int course){
         Course = course;
         Latitude = -Settings.Meteorites_Height;
     }
@@ -33,7 +35,7 @@ public class Meteorite implements IRenderable, ITickable {
      * Gets course number
      * @return course number (1-3)
      */
-    int GetCourse(){
+    private int GetCourse(){
         return Course;
     }
 
@@ -41,7 +43,7 @@ public class Meteorite implements IRenderable, ITickable {
      * Returns latitude
      * @return latitude of meteorite
      */
-    float GetLatitude(){
+    private float GetLatitude(){
         return Latitude;
     }
 
@@ -49,7 +51,7 @@ public class Meteorite implements IRenderable, ITickable {
      * Sets latitude
      * @param latitude latitude to set
      */
-    void SetLatitude(float latitude){
+    private void SetLatitude(float latitude){
         Latitude = latitude;
     }
 

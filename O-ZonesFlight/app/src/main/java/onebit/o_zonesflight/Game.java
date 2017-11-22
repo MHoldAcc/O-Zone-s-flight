@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
+ * The class represents the game itself
  * Created by Michael on 20.09.2017.
  */
-public class Game {
+class Game {
     /** The time till the next meteorite strikes */
     private int timeTillNextMeteorite;
     /** The current Velocity of the meteorites */
@@ -34,7 +35,7 @@ public class Game {
      * Initializes Game
      * @param saveManager How to load and save
      */
-    public Game(ISaveFileManager saveManager){
+    Game(ISaveFileManager saveManager){
         this.saveManager = saveManager;
         RNG = new Random();
         ResetGame();
@@ -43,7 +44,7 @@ public class Game {
     /**
      * Resets the current game
      */
-    public void ResetGame(){
+    void ResetGame(){
         gameOver = false;
         score = 0;
         SavedState saveData = saveManager.LoadGame();
@@ -57,7 +58,7 @@ public class Game {
         currentVelocity = 1;
     }
 
-    protected void Collided(ITickable tickable){
+    void Collided(ITickable tickable){
         if (tickable instanceof Coin){
             money++;
         } else if (tickable instanceof Meteorite){
@@ -70,7 +71,7 @@ public class Game {
      * @param bearing how much the player moves to the left or right
      * @return false if game over
      */
-    protected boolean DoFrame(float bearing){
+    boolean DoFrame(float bearing){
 
         ArrayList<ITickable> removable = new ArrayList<>();
 
@@ -105,7 +106,7 @@ public class Game {
         return !gameOver;
     }
 
-    public ArrayList<IRenderable> getRenderables(){
+    ArrayList<IRenderable> getRenderables(){
         ArrayList<IRenderable> renderables = new ArrayList<>();
         for (ITickable tickable : tickables) { if (tickable instanceof IRenderable) renderables.add((IRenderable) tickable); }
         return renderables;
@@ -114,7 +115,7 @@ public class Game {
     /**
      * Returns current Player
      */
-    public Player GetPlayer(){
+    Player GetPlayer(){
         for (ITickable tickable : tickables) if (tickable instanceof Player) return (Player)tickable;
         return null;
     }
@@ -122,14 +123,14 @@ public class Game {
     /**
      * Returns current score
      */
-    public int GetScore(){
+    int GetScore(){
         return score;
     }
 
     /**
      * Returns current Highscore
      */
-    public int GetHighScore(){
+    int GetHighScore(){
         return highScore;
     }
 }

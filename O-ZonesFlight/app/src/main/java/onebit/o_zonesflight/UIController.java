@@ -10,12 +10,10 @@ import android.graphics.RectF;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 

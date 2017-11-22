@@ -12,7 +12,7 @@ class GameTickRunnable implements Runnable {
      * Creates a GameTickRunnable instance.
      * @param owner The UIController which GameTick method should be ran
      */
-    public GameTickRunnable(UIController owner){
+    GameTickRunnable(UIController owner){
         this.owner = owner;
     }
 

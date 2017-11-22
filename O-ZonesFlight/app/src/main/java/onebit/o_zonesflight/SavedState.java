@@ -3,9 +3,10 @@ package onebit.o_zonesflight;
 import java.util.ArrayList;
 
 /**
+ * Represents the save data
  * Created by Michael on 20.09.2017.
  */
-public class SavedState {
+class SavedState {
     /**
      * Highscore to save
      */
@@ -19,12 +20,12 @@ public class SavedState {
      * Initializes save state
      * @param highscore highscore to save
      */
-    public SavedState(int highscore, int coins, ArrayList<Integer> unlockedItems){
+    SavedState(int highscore, int coins, ArrayList<Integer> unlockedItems){
         Highscore = highscore;
         Coins = coins;
         UnlockedItems = unlockedItems;
     }
-    public SavedState(int highscore, int coins, String unlockedItemsSaveString){
+    SavedState(int highscore, int coins, String unlockedItemsSaveString){
         Highscore = highscore;
         Coins = coins;
         UnlockedItems = new ArrayList<>();
@@ -34,7 +35,7 @@ public class SavedState {
             for (String item : unlockedItemsSaveString.split(",")) {
                 try{
                     UnlockedItems.add(Integer.parseInt(item));
-                } catch (Exception ex){}
+                } catch (Exception ignored){}
             }
         }
     }
@@ -43,22 +44,23 @@ public class SavedState {
      * Returns Highscore
      * @return saved highscore
      */
-    public int GetHighscore(){
+    int GetHighscore(){
         return Highscore;
     }
-    public int GetCoins(){
+    int GetCoins(){
         return Coins;
     }
-    public ArrayList<Integer> GetUnlockedItems(){
+    ArrayList<Integer> GetUnlockedItems(){
         // Create new ArrayList to prevent mutation
         return new ArrayList<>(UnlockedItems);
     }
-    public String GetUnlockedItemsSaveString(){
-        String result = "[";
+    String GetUnlockedItemsSaveString(){
+        StringBuilder result = new StringBuilder("[");
         for(int i = 0; i < UnlockedItems.size(); i++){
-            if (i > 0) result += ",";
-            result += UnlockedItems.get(i);
+            if (i > 0) result.append(",");
+            result.append(UnlockedItems.get(i));
         }
-        return result + "]";
+        result.append("]");
+        return result.toString();
     }
 }

@@ -26,7 +26,7 @@ class OrientationSensorListener implements SensorEventListener {
      * @param owner The UIController which requires the Sensor Data
      * @param sensor The Sensor that will use the sensor data to provide orientation data
      */
-    public OrientationSensorListener(UIController owner, SensorManager sensor){
+    OrientationSensorListener(UIController owner, SensorManager sensor){
         sensor.registerListener(this, sensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
         sensor.registerListener(this, sensor.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
         this.owner = owner;

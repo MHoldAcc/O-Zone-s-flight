@@ -4,12 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 
 /**
+ * This class represents the player
  * Created by Michael on 20.09.2017.
  */
 public class Player implements IRenderable, ITickable {
 
     private static Bitmap bmp;
-    public static void setBitmap(Bitmap image){ bmp = image; }
+    static void setBitmap(Bitmap image){ bmp = image; }
     /**
      * Current position longitude of player
      */
@@ -18,7 +19,7 @@ public class Player implements IRenderable, ITickable {
     /**
      * Initializes players
      */
-    public Player(){
+    Player(){
         Position = Settings.Environment_Width / 2 - Settings.Player_Width / 2;
     }
 
@@ -26,7 +27,7 @@ public class Player implements IRenderable, ITickable {
      * Returns position of player
      * @return current position of player
      */
-    public float GetPosition(){
+    float GetPosition(){
         return Position;
     }
 
@@ -34,7 +35,7 @@ public class Player implements IRenderable, ITickable {
      * Uses bearing to set player position
      * @param bearing how much the phone is tilted
      */
-    public void ApplyBearing(float bearing){
+    void ApplyBearing(float bearing){
         //Ignore values below the DeathZone
         if( Math.abs(bearing) > Settings.Inputs_DeathZone ) {
             //Applies Input limitation

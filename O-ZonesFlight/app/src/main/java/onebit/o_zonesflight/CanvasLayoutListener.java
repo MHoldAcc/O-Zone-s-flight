@@ -20,7 +20,7 @@ class CanvasLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
      * @param owner UIController on which the callback is invoked
      * @param canvasContainer The ImageView which serves as a canvas
      */
-    public CanvasLayoutListener(UIController owner, ImageView canvasContainer){ this.owner = owner; this.canvasContainer = canvasContainer; }
+    CanvasLayoutListener(UIController owner, ImageView canvasContainer){ this.owner = owner; this.canvasContainer = canvasContainer; }
 
     /**
      * This method is called once the Layout has been set up.

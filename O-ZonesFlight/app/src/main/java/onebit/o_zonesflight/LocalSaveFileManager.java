@@ -12,7 +12,7 @@ public class LocalSaveFileManager implements ISaveFileManager {
      * Initializes and sets UI Controller
      * @param uiController UIController to set
      */
-    public LocalSaveFileManager(UIController uiController){
+    LocalSaveFileManager(UIController uiController){
         SetUIController(uiController);
     }
 
@@ -20,7 +20,7 @@ public class LocalSaveFileManager implements ISaveFileManager {
      * Sets UI Controller
      * @param uiController UIController to set
      */
-    public void SetUIController(UIController uiController){
+    private void SetUIController(UIController uiController){
         controller = uiController;
     }
 
@@ -48,5 +48,5 @@ public class LocalSaveFileManager implements ISaveFileManager {
     /**
      * UI Controller to use for saving
      */
-    private static UIController controller = null;
+    private UIController controller = null;
 }

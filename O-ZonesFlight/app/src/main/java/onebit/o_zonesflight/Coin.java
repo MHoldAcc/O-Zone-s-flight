@@ -2,16 +2,16 @@ package onebit.o_zonesflight;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
-import android.os.Environment;
 
 /**
+ * This class represents a collectible coin for the game
  * Created by silva on 26.10.2017.
  */
 
 public class Coin implements IRenderable, ITickable{
 
     private static Bitmap bmp;
-    public static void setBitmap(Bitmap image){ bmp = image; }
+    static void setBitmap(Bitmap image){ bmp = image; }
 
     /**
      * The position of the left side of the coin
@@ -30,7 +30,7 @@ public class Coin implements IRenderable, ITickable{
      * Sets the position of the top side to the new value
      * @param newTop The new value for the position of the top side
      */
-    public void SetTop(float newTop) { top = newTop; }
+    private void SetTop(float newTop) { top = newTop; }
 
     @Override
     public float GetTop() { return top; }
