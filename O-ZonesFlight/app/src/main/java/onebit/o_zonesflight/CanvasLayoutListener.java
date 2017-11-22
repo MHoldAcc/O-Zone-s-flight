@@ -31,6 +31,11 @@ class CanvasLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
         canvasContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         Bitmap display = Bitmap.createBitmap(canvasContainer.getWidth(), canvasContainer.getHeight(), Bitmap.Config.ARGB_8888);
         canvasContainer.setImageBitmap(display);
-        owner.LayoutDoneCallback(display);
+
+        try {
+            UIControllerState.Running.Continue(owner, display);
+        } catch (UIControllerState.InvalidStateException e) {
+            e.printStackTrace();
+        }
     }
 }

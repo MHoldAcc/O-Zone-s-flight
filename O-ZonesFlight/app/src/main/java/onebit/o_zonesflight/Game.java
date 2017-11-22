@@ -1,7 +1,6 @@
 package onebit.o_zonesflight;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -14,28 +13,56 @@ public class Game {
     private float currentVelocity;
     /** The time till the next increase of velocity */
     private int timeTillVelocityIncrease;
-    /** All current meteorites */
-    private ArrayList<Meteorite> Meteorites;
-    /** All current coins */
-    private ArrayList<Coin> Coins;
-    /** The current player */
-    private Player PlayerInstance;
+    /** All Tickable Objects like Players, Meteorites and Coins */
+    private ArrayList<ITickable> tickables;
+    /** Tells if the game is over */
+    private boolean gameOver;
     /** The current money */
-    private int Money;
+    private int money;
     /** The current score */
-    private int Score;
+    private int score;
     /** The current highscore */
-    private int HighScore;
+    private int highScore;
     /** Manages saving and loading */
-    private ISaveFileManager SaveManager;
+    private ISaveFileManager saveManager;
+    /** The List of unlocked items for the shop */
+    private ArrayList<Integer> unlockables;
+    /** The Random Number Generator */
+    private Random RNG;
 
     /**
      * Initializes Game
      * @param saveManager How to load and save
      */
     public Game(ISaveFileManager saveManager){
-        SaveManager = saveManager;
+        this.saveManager = saveManager;
+        RNG = new Random();
         ResetGame();
+    }
+
+    /**
+     * Resets the current game
+     */
+    public void ResetGame(){
+        gameOver = false;
+        score = 0;
+        SavedState saveData = saveManager.LoadGame();
+        highScore = saveData.GetHighscore();
+        money = saveData.GetCoins();
+        unlockables = saveData.GetUnlockedItems();
+        tickables = new ArrayList<>();
+        tickables.add(new Player());
+        timeTillNextMeteorite = 0;
+        timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
+        currentVelocity = 1;
+    }
+
+    protected void Collided(ITickable tickable){
+        if (tickable instanceof Coin){
+            money++;
+        } else if (tickable instanceof Meteorite){
+            gameOver = true;
+        }
     }
 
     /**
@@ -44,72 +71,25 @@ public class Game {
      * @return false if game over
      */
     protected boolean DoFrame(float bearing){
-        boolean collision = false;
 
-        //Moves Player
-        PlayerInstance.ApplyBearing(bearing);
+        ArrayList<ITickable> removable = new ArrayList<>();
 
-        ArrayList<Meteorite> meteoriteToRemove = new ArrayList<>();
-        ArrayList<Coin> coinsToRemove = new ArrayList<>();
-
-        for (Coin coin : Coins){
-            coin.SetY(coin.GetY() - Settings.Coin_Movement * currentVelocity);
-            if (coin.GetY() + coin.GetHeight() < Settings.Environment_Height) {
-                float distX, distY;
-                distX = PlayerInstance.GetX() + PlayerInstance.GetWidth() / 2 - coin.GetX() - coin.GetWidth() / 2;
-                distY = PlayerInstance.GetY() + PlayerInstance.GetHeight() / 2 - coin.GetY() - coin.GetHeight() / 2;
-                float dist = (float) Math.sqrt(distX * distX + distY * distY) -
-                        Math.max(coin.GetHeight(), coin.GetWidth()) / 2 -
-                        Math.max(PlayerInstance.GetHeight(), PlayerInstance.GetWidth()) / 2;
-                if (dist <= 0) {
-                    coinsToRemove.add(coin);
-                    Money++;
-                }
-            } else{
-                coinsToRemove.add(coin);
-            }
+        for (ITickable tickable : tickables) {
+            tickable.Tick(this, bearing, currentVelocity);
+            if (tickable.CanBeRemoved()) removable.add(tickable);
         }
+        tickables.removeAll(removable);
 
-        //Moves existing Meteorites
-        for (Meteorite meteor:Meteorites){
-            meteor.SetLatitude(meteor.GetLatitude() - Settings.Meteorites_Movement * currentVelocity);
-
-            //Removes meteorite if Latitude is under 0
-            if(meteor.GetLatitude() <= Settings.Meteorites_Height) {
-                meteoriteToRemove.add(meteor);
-            }
-            //Checks for collisions
-            else if(meteor.GetLatitude() - Settings.Meteorites_Height <= Settings.Player_Height){
-                int meteorPositionLeft = meteor.GetCourse() * Settings.Environment_LineWidth;
-                int meteorPositionRight = meteorPositionLeft + Settings.Environment_LineWidth;
-                int playerPositionLeft = (int)PlayerInstance.GetPosition();
-                int playerPositionRight = (int)PlayerInstance.GetPosition() + Settings.Player_Width;
-                if(meteorPositionLeft <= playerPositionRight && playerPositionLeft <= meteorPositionRight)
-                    collision = true;
-            }
-        }
-
-        Coins.removeAll(coinsToRemove);
-        Meteorites.removeAll(meteoriteToRemove);
-
-        if(collision && Score > HighScore){
-            SaveManager.SaveGame(new SavedState(Score));
-            HighScore = SaveManager.LoadGame().GetHighscore();
-        }
-        else if (!collision){
-            //Adds Score
-            Score = Score + Settings.Gameplay_MillisecondsPerFrame;
+        if (!gameOver){
+            //Adds score
+            score += Settings.Gameplay_MillisecondsPerFrame;
             //Sets time till
             timeTillNextMeteorite -= Settings.Gameplay_MillisecondsPerFrame;
             timeTillVelocityIncrease -= Settings.Gameplay_MillisecondsPerFrame;
 
             //Add Meteorite if needed
             if(timeTillNextMeteorite <= 0) {
-                Random rand = new Random();
-                int randomNum = rand.nextInt(Settings.Environment_LineCount);
-                Meteorite meteor = new Meteorite(randomNum);
-                meteor.SetLatitude(Settings.Environment_Height + Settings.Meteorites_Height);
-                Meteorites.add(meteor);
+                tickables.add(new Meteorite(RNG.nextInt(Settings.Environment_LineCount)));
                 timeTillNextMeteorite = Settings.Gameplay_TimeTillNewMeteorite;
             }
             //Sets velocity
@@ -117,52 +97,39 @@ public class Game {
                 timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
                 currentVelocity *= Settings.Gameplay_VelocityIncrease;
             }
+        } else {
+            highScore = Math.max(score, highScore);
+            saveManager.SaveGame(new SavedState(highScore, money, unlockables));
         }
 
-        return !collision;
+        return !gameOver;
     }
 
-    /**
-     * Returns all current meteorites
-     */
-    public ArrayList<Meteorite> GetMeteorites(){
-        return Meteorites;
+    public ArrayList<IRenderable> getRenderables(){
+        ArrayList<IRenderable> renderables = new ArrayList<>();
+        for (ITickable tickable : tickables) { if (tickable instanceof IRenderable) renderables.add((IRenderable) tickable); }
+        return renderables;
     }
-
-    public ArrayList<Coin> GetCoins() { return Coins; }
 
     /**
      * Returns current Player
      */
     public Player GetPlayer(){
-        return PlayerInstance;
+        for (ITickable tickable : tickables) if (tickable instanceof Player) return (Player)tickable;
+        return null;
     }
 
     /**
      * Returns current score
      */
     public int GetScore(){
-        return Score;
+        return score;
     }
 
     /**
      * Returns current Highscore
      */
     public int GetHighScore(){
-        return HighScore;
-    }
-
-    /**
-     * Resets the current game
-     */
-    public void ResetGame(){
-        Score = 0;
-        HighScore = SaveManager.LoadGame().GetHighscore();
-        PlayerInstance = new Player();
-        Meteorites = new ArrayList<>();
-        Coins = new ArrayList<>();
-        timeTillNextMeteorite = 0;
-        timeTillVelocityIncrease = Settings.Gameplay_TimeTillVelocityIncrease;
-        currentVelocity = 1;
+        return highScore;
     }
 }

@@ -17,7 +17,7 @@ class Settings {
     final static int Gameplay_MillisecondsPerFrame = 33;
     //***Player***
     /** The maximum amount of units the player may move in a single tick */
-    final static int Player_MaxMovement = 40;
+    final static int Player_BaseSpeed = 40;
     /** The height of the player in units */
     final static int Player_Height = 10;
     /** The width of the player in units */

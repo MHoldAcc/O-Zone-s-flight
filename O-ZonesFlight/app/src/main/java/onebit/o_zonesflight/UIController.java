@@ -11,7 +11,6 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,40 +26,32 @@ import java.util.TimerTask;
  */
 public class UIController extends Activity {
 
-    private static final String TAG = "UIC";
-
     /** The reference to the Game. */
-    private Game GameInstance;
+    Game GameInstance;
     /** The state of the UI Controller */
-    private UIControllerState State;
+    UIControllerState State;
 
 
     // Timer
     /** The timer which runs the game loop */
-    private Timer GameTimer;
+    Timer GameTimer;
     /** The task which is called by the timer to run the game loop */
-    private TimerTask TickWrapper;
+    TimerTask TickWrapper;
 
 
     //Sprites
-    /** The player Sprite */
-    private Bitmap bmp_oZone;
-    /** The Meteor Sprite */
-    private Bitmap bmp_meteor;
     /** The Background Sprite */
     private Bitmap bmp_space;
-    /** The Coin (1) Sprite */
-    private Bitmap bmp_coin1;
 
     //Resources
     /** The Music Player */
     private MediaPlayer player = null;
     /** The Display Bitmap the canvas draws on */
-    private Bitmap display;
+    Bitmap display;
     /** The Canvas instance that draws the game on the UI */
-    private Canvas canvas;
+    Canvas canvas;
     /** ImageView which renders the game */
-    private ImageView canvasContainer;
+    ImageView canvasContainer;
     /** Data required to read the orientation of the device */
     private float[] Gravity;
     /** Data required to read the orientation of the device */
@@ -94,13 +85,15 @@ public class UIController extends Activity {
         InitializeMusic();
 
         //Initialize Sprites
-        bmp_oZone = BitmapFactory.decodeResource(getResources(), R.mipmap.ozone_character);
-        bmp_meteor = BitmapFactory.decodeResource(getResources(), R.mipmap.meteorite);
+        Player.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ozone_character));
+        Meteorite.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.meteorite));
+        Coin.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.coin_1));
         bmp_space = BitmapFactory.decodeResource(getResources(),R.mipmap.space);
-        bmp_coin1 = BitmapFactory.decodeResource(getResources(), R.mipmap.coin_1);
+
+
 
         // Switch to GameMenu State
-        GameMenu();
+        UIControllerState.MainMenu.Activate(this);
     }
 
     /**
@@ -111,9 +104,9 @@ public class UIController extends Activity {
     public void OnClickHandler(View sender) {
         System.out.print("TEST");
         switch (sender.getId()){
-            case R.id.btn_start:    GameStart();    break;
-            case R.id.btn_credits:  GameCredits();  break;
-            case R.id.btn_back:     GameMenu();     break;
+            case R.id.btn_start:    UIControllerState.Running.Activate(this);   break;
+            case R.id.btn_credits:  UIControllerState.Credits.Activate(this);   break;
+            case R.id.btn_back:     UIControllerState.MainMenu.Activate(this);  break;
             // Invalid IDs should throw an exception
             default:
                 Exception ex = new Exception("The ID of the previously clicked button is unknown.");
@@ -144,43 +137,15 @@ public class UIController extends Activity {
                 null);
         //Redraw
 
-        //Player
-        //Calculate position
-        RectF pos = TranslateRenderablePos(GameInstance.GetPlayer(), display);
-        //Draw Player
-        canvas.drawBitmap(
-                bmp_oZone,
-                new Rect(
-                        0,
-                        0,
-                        bmp_oZone.getWidth(),
-                        bmp_oZone.getHeight()),
-                pos,
-                null);
-        //Iterate meteorites
-        for (Meteorite m: GameInstance.GetMeteorites()) {
-            //Calculate
-            pos = TranslateRenderablePos(m, display);
+        //Draw all Renderables
+
+        for(IRenderable r : GameInstance.getRenderables()){
             canvas.drawBitmap(
-                    bmp_meteor,
-                    new Rect(
-                            0,
-                            0,
-                            bmp_meteor.getWidth(),
-                            bmp_meteor.getHeight()),
-                    pos,
+                    r.GetImage(),
+                    new Rect(0,0, r.GetImage().getWidth(), r.GetImage().getHeight()),
+                    TranslateRenderablePos(r, display),
                     null);
-        }
-        for(Coin c: GameInstance.GetCoins()){
-            pos = TranslateRenderablePos(c, display);
-            canvas.drawBitmap(bmp_coin1,
-                    new Rect(
-                            0,
-                            0,
-                            bmp_coin1.getWidth(),
-                            bmp_coin1.getHeight()),
-                    pos,
-                    null);
+
         }
         // MAke screen refresh
         canvasContainer.invalidate();
@@ -196,12 +161,11 @@ public class UIController extends Activity {
         float roll = values[2] / (float)Math.PI;
 
         //Do Game Tick
-        boolean result = GameInstance.DoFrame(roll);
-        if (!result)
+        if (!GameInstance.DoFrame(roll))
         {
             TickWrapper.cancel();
             GameTimer.cancel();
-            GameOver();
+            UIControllerState.GameOver.Activate(this);
         } else{
             // Update Score
             TextView scoreDisplay = (TextView)findViewById(R.id.tex_score);
@@ -209,99 +173,6 @@ public class UIController extends Activity {
         }
     }
 
-    /**
-     * Sets the UIController to the Running state and applies changes partially.
-     * Requires some value obtained after the layout is done. because of that it is
-     * continued in LayoutDoneCallback()
-     */
-    public void GameStart(){
-        // Set layout and state
-        setContentView(R.layout.lay_gamerunning);
-        State = UIControllerState.Running;
-
-        //Reset existing game status
-        GameInstance.ResetGame();
-
-        canvasContainer = (ImageView) findViewById(R.id.img_canvas);
-        canvasContainer.getViewTreeObserver().addOnGlobalLayoutListener(new CanvasLayoutListener(this, canvasContainer));
-        // Continue rest once the canvas is available on the LayoutDoneCallback
-    }
-
-    /**
-     * Callback for the GameStart UI update. The Game-Loop needs the UI values before starting,
-     * which can only be retrieved once the UI has been drawn.
-     * Can be seen as direct continuation of GameStart()
-     * @param display The bitmap representing the display
-     */
-    public void LayoutDoneCallback(Bitmap display){
-        this.display = display;
-        final Handler mainHandler = new Handler(getMainLooper());
-        canvas = new Canvas(display);
-        GameTimer = new Timer();
-        TickWrapper = new TimerTask() {
-            @Override
-            public void run() {
-                mainHandler.post(new GameTickRunnable(UIController.this));
-            }
-        };
-
-        GameTimer.schedule(TickWrapper, 0, Settings.Gameplay_MillisecondsPerFrame);
-    }
-
-    /**
-     * Sets the UIController to the GameOver state and applies chages accordingly
-     */
-    public void GameOver(){
-        // Set layout and state
-
-        setContentView(R.layout.lay_gameover);
-        State = UIControllerState.GameOver;
-
-        //load highscore
-        TextView highScoreText = (TextView) findViewById(R.id.tex_highscore);
-        highScoreText.setText(
-                String.format(
-                        Locale.getDefault(),
-                        "%s: %d",
-                        getResources().getText(R.string.txt_highscore),
-                        GameInstance.GetHighScore()));
-
-        //load score
-
-        TextView scoreText = (TextView) findViewById(R.id.tex_score);
-        scoreText.setText(
-                String.format(
-                        Locale.getDefault(),
-                        "%s: %d",
-                        getResources().getText(R.string.txt_score),
-                        GameInstance.GetScore()));
-    }
-
-    /**
-     * Sets the UIController to the Credits state und applies changes accordingly
-     */
-    public void GameCredits(){
-        setContentView(R.layout.lay_gamecredits);
-        State = UIControllerState.Credits;
-    }
-
-    /**
-     * Sets the UIController into the GameMenu state and applies changes accordingly
-     */
-    public void GameMenu(){
-        // Set layout and state
-        setContentView(R.layout.lay_gamestart);
-        State = UIControllerState.MainMenu;
-
-        //load highscore
-        TextView highScoreText = (TextView) findViewById(R.id.tex_highscore);
-        highScoreText.setText(
-                String.format(
-                        Locale.getDefault(),
-                        "%s: %d",
-                        getResources().getText(R.string.txt_highscore),
-                        GameInstance.GetHighScore()));
-    }
 
     /**
      * Callback for the Gravity sensor.
@@ -344,12 +215,14 @@ public class UIController extends Activity {
     }
 
     private RectF TranslateRenderablePos(IRenderable renderable, Bitmap display){
-        return new RectF(
-                renderable.GetX() / Settings.Environment_Width * display.getWidth(),
-                display.getHeight()-renderable.GetY() / Settings.Environment_Height * display.getHeight(),
-                (renderable.GetX() + renderable.GetWidth()) / Settings.Environment_Width * display.getWidth(),
-                display.getHeight()-(renderable.GetY() - renderable.GetHeight()) / Settings.Environment_Height * display.getHeight()
-                );
+        RectF rect = renderable.GetRect();
+        float multX = display.getWidth() / Settings.Environment_Width;
+        float multY = display.getHeight() / Settings.Environment_Height;
+        rect.left *= multX;
+        rect.right *= multX;
+        rect.top *= multY;
+        rect.bottom *= multY;
+        return rect;
     }
 
 }
