@@ -43,4 +43,15 @@
         android:layout_marginBottom="@dimen/dim_margin_view"
         android:onClick="OnClickHandler" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="@dimen/dim_button_width"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_shop"
+        android:id="@+id/btn_shop"
+        android:layout_above="@id/btn_start"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dim_margin_view"
+        android:onClick="OnClickHandler" />
+
 </RelativeLayout>

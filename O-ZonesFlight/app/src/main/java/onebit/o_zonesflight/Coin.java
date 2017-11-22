@@ -7,7 +7,6 @@ import android.graphics.RectF;
  * This class represents a collectible coin for the game
  * Created by silva on 26.10.2017.
  */
-
 public class Coin implements IRenderable, ITickable{
 
     private static Bitmap bmp;

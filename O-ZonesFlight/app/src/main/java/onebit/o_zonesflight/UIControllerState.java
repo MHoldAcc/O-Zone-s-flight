@@ -66,7 +66,7 @@ public enum UIControllerState {
             case Running:
                 controller.setContentView(R.layout.lay_gamerunning);
 
-                //Reset existing game status
+                // Reset existing game status
                 controller.GameInstance.ResetGame();
 
                 controller.canvasContainer = (ImageView) controller.findViewById(R.id.img_canvas);
