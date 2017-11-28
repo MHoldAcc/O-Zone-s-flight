@@ -19,17 +19,17 @@ class OrientationSensorListener implements SensorEventListener {
     /**
      * The UIController which requires the Sensor Data
      */
-    private final UIController owner;
+    private final GameLoop loop;
 
     /**
      * Creates an instance of the OrientationSensorListener
-     * @param owner The UIController which requires the Sensor Data
+     * @param loop The UIController which requires the Sensor Data
      * @param sensor The Sensor that will use the sensor data to provide orientation data
      */
-    OrientationSensorListener(UIController owner, SensorManager sensor){
+    OrientationSensorListener(GameLoop loop, SensorManager sensor){
+		this.loop = loop;
         sensor.registerListener(this, sensor.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
         sensor.registerListener(this, sensor.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
-        this.owner = owner;
     }
 
     /**
@@ -40,10 +40,10 @@ class OrientationSensorListener implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         switch (event.sensor.getType()){
             case Sensor.TYPE_ACCELEROMETER:
-                owner.setGravity(event.values);
+                loop.setGravity(event.values);
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
-                owner.setMagField(event.values);
+                loop.setMagField(event.values);
                 break;
             default: Log.e(TAG, "Unknown Sensor Type: " + event.sensor.getType());
         }

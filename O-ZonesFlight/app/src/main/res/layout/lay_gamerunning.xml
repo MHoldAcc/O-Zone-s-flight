@@ -6,29 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_scoreupcase"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="@dimen/dim_margin_menu"
-        android:id="@+id/tex_score2"
-        android:focusable="false"
-        android:inputType="none"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dim_margin_menu"
-        android:layout_alignParentEnd="true"
-        android:focusable="false"
-        android:inputType="none"
-        android:id="@+id/tex_score"
-        tools:ignore="RelativeOverlap" />
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tex_score2"
         android:id="@+id/img_canvas"
         android:contentDescription="@string/txt_render_display"/>
 

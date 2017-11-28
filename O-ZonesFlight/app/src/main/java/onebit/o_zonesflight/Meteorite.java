@@ -2,6 +2,7 @@ package onebit.o_zonesflight;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
+import android.util.Size;
 
 /**
  * This class represents a meteorite.
@@ -10,8 +11,14 @@ import android.graphics.RectF;
  */
 public class Meteorite implements IRenderable, ITickable {
 
-    private static Bitmap bmp;
-    static void setBitmap(Bitmap image){ bmp = image; }
+	private static Texture texture;
+	private static Bitmap bmp;
+
+	static void DisposeBitmap(){ if (bmp != null) bmp.recycle(); }
+	static void setTexture(Texture texture, Size size) {
+		Meteorite.texture = texture;
+		bmp = texture.GetBitmap(size);
+	}
 
     /** Current course of the meteorite */
     private int Course;
@@ -28,7 +35,7 @@ public class Meteorite implements IRenderable, ITickable {
      */
     Meteorite(int course){
         Course = course;
-        Latitude = -Settings.Meteorites_Height;
+        Latitude = -Settings.Meteorites_Size;
     }
 
     /**
@@ -71,7 +78,7 @@ public class Meteorite implements IRenderable, ITickable {
     public float GetWidth() { return Settings.Environment_LineWidth; }
 
     @Override
-    public float GetHeight() { return Settings.Meteorites_Height; }
+    public float GetHeight() { return Settings.Meteorites_Size; }
 
     @Override
     public RectF GetRect() { return new RectF(GetLeft(), GetTop(), GetRight(), GetBottom()); }

@@ -2,6 +2,7 @@ package onebit.o_zonesflight;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
+import android.util.Size;
 
 /**
  * This class represents a collectible coin for the game
@@ -9,8 +10,14 @@ import android.graphics.RectF;
  */
 public class Coin implements IRenderable, ITickable{
 
-    private static Bitmap bmp;
-    static void setBitmap(Bitmap image){ bmp = image; }
+	private static Texture texture;
+	private static Bitmap bmp;
+
+	static void DisposeBitmap(){ if (bmp != null) bmp.recycle(); }
+	static void setTexture(Texture texture, Size size) {
+		Coin.texture = texture;
+		bmp = texture.GetBitmap(size);
+	}
 
     /**
      * The position of the left side of the coin

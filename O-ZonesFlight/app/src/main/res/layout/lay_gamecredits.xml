@@ -29,7 +29,6 @@
         android:layout_marginStart="@dimen/dim_margin_menu"
         android:id="@+id/onebitlogo"
         android:layout_below="@+id/devby"
-        android:src="@mipmap/onebit_logo"
         android:contentDescription="@string/txt_logo"
         android:layout_marginTop="@dimen/dim_margin_view" />
 

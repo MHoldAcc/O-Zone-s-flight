@@ -28,23 +28,23 @@ class Settings {
     /** The height of the game world in units */
     final static int Environment_Height = 100;
     /** The amount of paths a meteorite may fall on */
-    final static int Environment_LineCount = 3;
+    final static int   Environment_LineCount = 3;
     /** The width of a path a meteorite takes, calculated from the Environment_Width and the Environment_LineCount */
-    final static int Environment_LineWidth = Environment_Width / Environment_LineCount;
+    final static int   Environment_LineWidth = Environment_Width / Environment_LineCount;
     //***Meteorites***
     /** The base speed of the meteorites in Units per Tick */
-    final static int Meteorites_Movement = 3;
+    final static int   Meteorites_Movement   = 3;
     /** The height of a meteorite, matching the Environment_LineWidth */
     @SuppressWarnings("SuspiciousNameCombination")
-    final static int Meteorites_Height = Environment_LineWidth;
+    final static int   Meteorites_Size       = Environment_LineWidth;
     //***Coins***
     /** The size of the Coin */
-    final static int Coin_Size = 5;
+    final static int   Coin_Size             = 5;
     /** The base speed of the coins in Units oer Tick */
-    final static int Coin_Movement = 2;
+    final static int   Coin_Movement         = 2;
     //***Inputs***
     /** The DeathZone, the threshold of input that is ignored from the hardware sensor */
-    final static float Inputs_DeathZone = 0.02f;
+    final static float Inputs_DeathZone      = 0.02f;
     /** The upper limit of the input that is accepted */
-    final static float Inputs_MaxInput = 0.3f;
+    final static float Inputs_MaxInput       = 0.3f;
 }

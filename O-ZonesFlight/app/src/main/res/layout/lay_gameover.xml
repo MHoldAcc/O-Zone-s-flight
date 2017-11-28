@@ -32,13 +32,25 @@
 
     <Button
         style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/dim_button_width"
+        android:text="@string/txt_back"
+        android:id="@+id/btn_back"
+        android:layout_marginBottom="@dimen/dim_margin_menu"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="OnClickHandler"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="@dimen/dim_button_width"
         android:layout_height="wrap_content"
         android:text="@string/txt_credits"
         android:id="@+id/btn_credits"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@id/btn_back"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dim_margin_menu"
+        android:layout_marginBottom="@dimen/dim_margin_view"
         android:onClick="OnClickHandler"/>
 
     <Button
@@ -51,5 +63,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/dim_margin_view"
         android:onClick="OnClickHandler"/>
+
 
 </RelativeLayout>

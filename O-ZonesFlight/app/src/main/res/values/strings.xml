@@ -12,13 +12,32 @@
     <string name="txt_creditsseealso">Please also look at the PC version of O-Zone! \nA brand new game ready for you to play. \n<a href='http:\\onebit.itch.io/o-zone'>onebit.itch.io/o-zone</a>\n\nSpecial thanks to Jonas Fendriger and Remo Hösli for helping us with the soundtrack!</string>
     <string name="txt_back">Back</string>
     <string name="txt_logo">Onebit Logo</string>
-    <string name="sav_high_score">oF_Score</string>
-    <string name="sav_coins">oF_Coins</string>
-    <string name="sav_unlockables">oF_Unlockables</string>
     <string name="txt_shop">Shop</string>
     <string name="txt_change">Change</string>
     <string name="txt_background">Background</string>
     <string name="txt_character">O-Zone</string>
     <string name="txt_meteor">Meteor</string>
     <string name="txt_coin">Coin</string>
+    <string name="sav_high_score">oF_Score</string>
+    <string name="sav_coins">oF_Coins</string>
+    <string name="sav_unlockables">oF_Unlockable</string>
+    <string name="sav_selected">oF_Selected</string>
+    <string-array name="tex_files">
+        <item>space</item>
+        <item>ozone_character</item>
+        <item>meteorite</item>
+        <item>coin_1</item>
+    </string-array>
+    <string-array name="tex_names">
+        <item>Space</item>
+        <item>O-Zone</item>
+        <item>Meteor</item>
+        <item>Coin</item>
+    </string-array>
+    <string-array name="tex_descriptions">
+        <item>Stars and space-dust.</item>
+        <item>The hero himself.</item>
+        <item>A quite dangerous rock.</item>
+        <item>Made of pure gold.</item>
+    </string-array>
 </resources>

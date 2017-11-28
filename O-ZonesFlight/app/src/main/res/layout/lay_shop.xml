@@ -36,12 +36,14 @@
                 android:layout_weight="1"
                 android:text="@string/txt_background"/>
             <ImageView
+                android:id="@+id/bmp_bg"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/txt_background"
                 android:src="@mipmap/space"/>
             <Button
+                android:id="@+id/btn_bg"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -57,12 +59,14 @@
                 android:layout_weight="1"
                 android:text="@string/txt_character"/>
             <ImageView
+                android:id="@+id/bmp_chara"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/txt_character"
                 android:src="@mipmap/ozone_character"/>
             <Button
+                android:id="@+id/btn_chara"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -78,12 +82,14 @@
                 android:layout_weight="1"
                 android:text="@string/txt_meteor"/>
             <ImageView
+                android:id="@+id/bmp_met"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/txt_meteor"
                 android:src="@mipmap/meteorite"/>
             <Button
+                android:id="@+id/btn_met"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -99,12 +105,14 @@
                 android:layout_weight="1"
                 android:text="@string/txt_coin"/>
             <ImageView
+                android:id="@+id/bmp_coin"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/txt_coin"
                 android:src="@mipmap/coin_1"/>
             <Button
+                android:id="@+id/btn_coin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
