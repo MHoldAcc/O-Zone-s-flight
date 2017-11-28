@@ -10,6 +10,7 @@ import android.util.Size;
  */
 public class Player implements IRenderable, ITickable {
 
+	@SuppressWarnings( "unused" )
 	private static Texture texture;
 	private static Bitmap bmp;
 

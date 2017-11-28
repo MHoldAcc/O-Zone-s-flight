@@ -10,8 +10,9 @@ import android.util.Size;
  */
 public class Coin implements IRenderable, ITickable{
 
+	@SuppressWarnings( "unused" )
 	private static Texture texture;
-	private static Bitmap bmp;
+	private static Bitmap  bmp;
 
 	static void DisposeBitmap(){ if (bmp != null) bmp.recycle(); }
 	static void setTexture(Texture texture, Size size) {
@@ -32,7 +33,8 @@ public class Coin implements IRenderable, ITickable{
 
     public Coin(float left){ this.left = left; top = -Settings.Coin_Size; }
 
-    /**
+
+	/**
      * Sets the position of the top side to the new value
      * @param newTop The new value for the position of the top side
      */

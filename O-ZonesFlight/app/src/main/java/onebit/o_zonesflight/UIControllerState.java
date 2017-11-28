@@ -5,15 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
-import android.os.Handler;
 import android.support.annotation.AnyRes;
 import android.util.Size;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Provides the available States for the UI Controller

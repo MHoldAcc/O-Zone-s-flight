@@ -22,11 +22,16 @@ class GameLoop implements Runnable {
     private final UIController owner;
     private final SavedState   state;
     private final Size         screenSize;
-    private final Game gameInstance;
-    private final Canvas canvas;
-    private final ImageView display;
-    private final Bitmap backBuffer;
-    private final Paint textPaint;
+    private final Game         gameInstance;
+    private final Canvas       canvas;
+    private final ImageView    display;
+    private final Bitmap       backBuffer;
+    private final Paint        textPaint;
+	private final float[]      identityMatrix;
+	private final float[]      rotationMatrix;
+	private final float[]      values ;
+	private float[] gravity;
+	private float[] magneticField;
 
 	private final Bitmap bmp_BG;
 
@@ -39,21 +44,20 @@ class GameLoop implements Runnable {
 	/** The task which is called by the timer to run the game loop */
 	private TimerTask tickWrapper;
 
-	/** Data required to read the orientation of the device */
-	private float[] gravity;
-	/** Data required to read the orientation of the device */
-	private float[] magneticField;
-
     /**
      * Creates a GameLoop instance.
      * @param controller The UIController which GameTick method should be ran
      */
     GameLoop(UIController controller) {
 
+		identityMatrix = new float[9];
+		rotationMatrix = new float[9];
+		values = new float[3];
+
 		gravity = new float[3];
 		magneticField = new float[3];
 		textPaint = new Paint();
-		textPaint.setARGB(255,255,255,255);
+		textPaint.setARGB(255, 255, 255, 255);
 		textPaint.setTextSize(50);
 
 		this.owner = controller;
@@ -70,19 +74,19 @@ class GameLoop implements Runnable {
 
 		screenSize = new Size(controller.display.getWidth(), controller.display.getHeight());
 
-		bmp_BG = new Texture( controller.getResources(), state.GetBackgroundID()).GetBitmap(screenSize);
+		bmp_BG = new Texture(controller.getResources(), state.GetBackgroundID()).GetBitmap(screenSize);
 		Player.setTexture(
-				new Texture( controller.getResources(), state.GetCharacterID()),
-				new Size( Settings.Player_Width * screenSize.getWidth() / Settings.Environment_Width,
-						Settings.Player_Height * screenSize.getHeight()/ Settings.Environment_Height));
+				new Texture(controller.getResources(), state.GetCharacterID()),
+				new Size(Settings.Player_Width * screenSize.getWidth() / Settings.Environment_Width,
+						 Settings.Player_Height * screenSize.getHeight() / Settings.Environment_Height));
 
 		Meteorite.setTexture(
-				new Texture( controller.getResources(), state.GetMeteorID()),
+				new Texture(controller.getResources(), state.GetMeteorID()),
 				new Size(Settings.Meteorites_Size * screenSize.getWidth() / Settings.Environment_Width,
 						 Settings.Meteorites_Size * screenSize.getHeight() / Settings.Environment_Height));
 
 		Coin.setTexture(
-				new Texture( controller.getResources(), state.GetCoinID()),
+				new Texture(controller.getResources(), state.GetCoinID()),
 				new Size(Settings.Coin_Size * screenSize.getWidth() / Settings.Environment_Width,
 						 Settings.Coin_Size * screenSize.getHeight() / Settings.Environment_Height));
 
@@ -134,11 +138,8 @@ class GameLoop implements Runnable {
 		display.invalidate();
 
 		// Read Sensor Data
-		float[] Rota   = new float[9];
-		float[] I      = new float[9];
-		float[] values = new float[3];
-		SensorManager.getRotationMatrix(Rota, I, gravity, magneticField);
-		SensorManager.getOrientation(Rota, values);
+		SensorManager.getRotationMatrix(identityMatrix, rotationMatrix, gravity, magneticField);
+		SensorManager.getOrientation(identityMatrix, values);
 
 		// Format sensor data
 		float roll = values[2] / (float) Math.PI;

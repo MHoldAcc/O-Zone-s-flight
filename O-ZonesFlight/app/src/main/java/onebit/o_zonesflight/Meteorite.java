@@ -11,6 +11,7 @@ import android.util.Size;
  */
 public class Meteorite implements IRenderable, ITickable {
 
+	@SuppressWarnings( "unused" )
 	private static Texture texture;
 	private static Bitmap bmp;
 
